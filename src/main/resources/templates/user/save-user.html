@@ -23,6 +23,7 @@
     </div>
 </div>
 <a href="/users">All Users</a>
+<a href="/posts/users">Add Post</a>
 <div class="col-sm-12 mt-5" style="text-align: center">
     <div class="col-sm-5">
         <form action="/users/save" method="post">
@@ -42,6 +43,12 @@
                 <p th:if="${missedToken} != null" style="color: red" th:text="${missedToken}"></p>
                 <p>User's token</p>
                 <input class="form-control" type="text" placeholder="EA1234..." name="token">
+            </div>
+
+            <div class="col-sm-12 mx-5 my-2">
+                <p th:if="${missedId} != null" style="color: red" th:text="${missedId}"></p>
+                <p>User's Profile Id</p>
+                <input class="form-control" type="text" placeholder="1234.." name="profileId">
             </div>
 
             <div class="col-sm-12 mx-5 my-2">

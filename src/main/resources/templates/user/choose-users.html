@@ -17,27 +17,39 @@
 </head>
 <body>
 <div class="col-sm-12">
-    <div class="col-sm-7">
+    <a href="/posts">All Posts</a>
+    <a href="/users">All Users</a>
+    <a href="/users/save">Add User</a>
+    <a href="/posts/users">Add Post</a>
+    <div class="col-sm-7 mx-3">
         <div>
             <form action="/posts/save" method="post">
-                message
-                <input type="text" name="message" class="img-fluid">
-                img
-                <input type="text" name="url" class="img-fluid">
+                    <div>
+                        <p>Message</p>
+                        <input type="text" name="message" class="img-fluid form-control">
+                    </div>
+                    <div>
+                        <p>Image Url</p>
+                        <input type="text" name="url" class="img-fluid form-control">
+                    </div>
+                </div>
                 <table class="table table-striped">
                     <thead>
                     <tr>
-                        <th></th>
+                        <th>
+                            <input type="checkbox" id="checkAll">
+                        </th>
                         <th>Name</th>
                         <th>Surname</th>
                         <th>Profile Type</th>
-                        <th>Type</th>
+                        <th>Post Type</th>
+
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="user:${users}">
                         <td>
-                            <input type="checkbox" name="profiles[]" th:value="${user.id}">
+                            <input type="checkbox" name="profiles[]" th:value="${user.id}" class="checkedUsers">
                         </td>
                         <td th:text="${user.name}"></td>
                         <td th:text="${user.surname}"></td>
@@ -53,19 +65,19 @@
                                     </select>
                                 </div>
                                 <div th:if="${user.profileType.toString().equalsIgnoreCase('INSTAGRAM')}"
-                                     style="display: none" class="mx-2">
+                                     class="mx-2">
                                     <select name="postType[]">
                                         <option value="instagram" selected>Instagram</option>
-                                        <option value="facebook">Facebook</option>
-                                        <option value="both">Both</option>
+                                        <option value="facebook" disabled>Facebook</option>
+                                        <option value="both" disabled>Both</option>
                                     </select>
                                 </div>
                                 <div th:if="${user.profileType.toString().equalsIgnoreCase('FACEBOOK')}"
-                                     style="display: none" class="mx-2">
+                                     class="mx-2">
                                     <select name="postType[]">
-                                        <option value="instagram">Instagram</option>
+                                        <option value="instagram" disabled>Instagram</option>
                                         <option value="facebook" selected>Facebook</option>
-                                        <option value="both">Both</option>
+                                        <option value="both" disabled>Both</option>
                                     </select>
                                 </div>
                             </div>
@@ -73,10 +85,27 @@
                     </tr>
                     </tbody>
                 </table>
-                <button class="form-control card">Post</button>
+                <button class="form-control card" onmouseenter="this.style.backgroundColor='black'; this.style.color='white';" onmouseleave="this.style.backgroundColor='white'; this.style.color='black';">Post</button>
             </form>
         </div>
     </div>
 </div>
 </body>
 </html>
+<script>
+    let checkAllButton = document.getElementById("checkAll");
+    checkAllButton.addEventListener("click", function () {
+        if (checkAllButton.checked) {
+            let elementsByClassName = document.getElementsByClassName("checkedUsers");
+            for (const elementByClass of elementsByClassName) {
+                elementByClass.checked = true;
+            }
+        } else {
+            let elementsByClassName = document.getElementsByClassName("checkedUsers");
+            for (const elementByClass of elementsByClassName) {
+                elementByClass.checked = false;
+            }
+        }
+
+    })
+</script>
