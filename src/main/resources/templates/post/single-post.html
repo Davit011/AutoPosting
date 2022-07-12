@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Single Post</title>
+</head>
+<body>
+<div class="col-sm-12">
+    <div class="col-sm-3 card m-4 d-inline-block">
+        <img th:src="${post.imgUrl}">
+    </div>
+    <div class="d-inline-block">
+        <div>
+            <p>Img Url</p>
+            <p th:text="${post.imgUrl}"></p>
+        </div>
+        <div>
+            <p>Text</p>
+            <p th:text="${post.text}"></p>
+        </div>
+        <div>
+            <p>Status</p>
+            <p th:text="${post.status}"></p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

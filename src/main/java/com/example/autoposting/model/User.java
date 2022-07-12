@@ -20,6 +20,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
+    private String profileId;
+
     private String name;
 
     private String surname;

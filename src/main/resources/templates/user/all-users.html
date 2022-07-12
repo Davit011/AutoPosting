@@ -13,7 +13,7 @@
             integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
             crossorigin="anonymous"></script>
     <meta charset="UTF-8">
-    <title>Add-User</title>
+    <title>All Users</title>
 </head>
 <body>
 <a href="/users/save">Add user</a>
@@ -27,8 +27,8 @@
         <table class="table table-striped">
             <thead>
             <tr>
-                <th>Name</th>
-                <th>Surname</th>
+               <th>Name</th>
+                 <th>Surname</th>
                 <th>Profile Type</th>
                 <th>Actions</th>
             </tr>
@@ -60,27 +60,3 @@
 
 </body>
 </html>
-
-
-<script>
-    window.fbAsyncInit = function() {
-        FB.init({
-            appId      : '{610695290270321}',
-            cookie     : true,
-            xfbml      : true,
-            version    : '{0.0.1}'
-        });
-
-        FB.AppEvents.logPageView();
-
-    };
-
-    (function(d, s, id){
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) {return;}
-        js = d.createElement(s); js.id = id;
-        js.src = "https://connect.facebook.net/en_US/sdk.js";
-        fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));
-</script>
-

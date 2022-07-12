@@ -22,52 +22,40 @@
         <h1>Add New User</h1>
     </div>
 </div>
-<div class="col-sm-12">
+<a href="/users">All Users</a>
+<div class="col-sm-12 mt-5" style="text-align: center">
     <div class="col-sm-5">
         <form action="/users/save" method="post">
-            <input type="number" name="id" th:value="${user.id}" style="display: none">
             <div class="col-sm-12 mx-5 my-2">
                 <p th:if="${missedName} != null" style="color: red" th:text="${missedName}"></p>
                 <p>User's name</p>
-                <input class="form-control" type="text" placeholder="Name" name="name" th:value="${user.name}">
+                <input class="form-control" type="text" placeholder="Name" name="name">
             </div>
 
             <div class="col-sm-12 mx-5 my-2">
                 <p th:if="${missedSurname} != null" style="color: red" th:text="${missedSurname}"></p>
                 <p>User's surname</p>
-                <input class="form-control" type="text" placeholder="Surname" name="surname" th:value="${user.surname}">
+                <input class="form-control" type="text" placeholder="Surname" name="surname">
             </div>
 
             <div class="col-sm-12 mx-5 my-2">
                 <p th:if="${missedToken} != null" style="color: red" th:text="${missedToken}"></p>
                 <p>User's token</p>
-                <input class="form-control" type="text" placeholder="EA1234..." name="token" th:value="${user.token}">
+                <input class="form-control" type="text" placeholder="EA1234..." name="token">
             </div>
 
             <div class="col-sm-12 mx-5 my-2">
                 <p th:if="${missedProfileType} != null" style="color: red" th:text="${missedProfileType}"></p>
                 <p>User's profile type</p>
-                <select class="form-control" name="userType" th:value="${user.getProfileType().name()}">
+                <select class="form-control" name="userType">
                     <option selected disabled hidden>Select Type</option>
-                    <option th:if="${user.profileType.name.equalsIgnoreCase('INSTAGRAM')}" selected value="INSTAGRAM">
-                        Instagram
-                    </option>
-                    <option th:if="${!user.profileType.name.equalsIgnoreCase('INSTAGRAM')}" value="INSTAGRAM">
-                        Instagram
-                    </option>
-                    <option th:if="${user.profileType.name.equalsIgnoreCase('FACEBOOK')}" selected value="FACEBOOK">
-                        Facebook
-                    </option>
-                    <option th:if="${!user.profileType.name.equalsIgnoreCase('FACEBOOK')}" value="FACEBOOK">Facebook
-                    </option>
-                    <option th:if="${user.profileType.name.equalsIgnoreCase('BOTH')}" selected value="BOTH">Both
-                    </option>
-                    <option th:if="${!user.profileType.name.equalsIgnoreCase('BOTH')}" value="BOTH">Both</option>
+                    <option value="INSTAGRAM">Instagram</option>
+                    <option value="FACEBOOK">Facebook</option>
+                    <option value="BOTH">Both</option>
                 </select>
-                <div class="my-3">
-                    <button class="form-control" style="color: blue;" type="submit">Update User</button>
+                <div class="mt-3">
+                    <button class="form-control" style="color: blue;" type="submit">Save User</button>
                 </div>
-
             </div>
         </form>
     </div>

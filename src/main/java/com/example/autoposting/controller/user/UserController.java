@@ -4,9 +4,6 @@ import com.example.autoposting.dto.SaveUserRequest;
 import com.example.autoposting.model.User;
 import com.example.autoposting.model.UserType;
 import com.example.autoposting.service.UserService;
-import com.restfb.FacebookClient;
-import com.restfb.Parameter;
-import com.restfb.types.FacebookType;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
@@ -22,37 +19,36 @@ import java.util.Optional;
 public class UserController {
     private final UserService userService;
     private final ModelMapper mapper;
-    private final FacebookClient facebookClient;
 
     @GetMapping
     public String allUsers(ModelMap modelMap) {
         List<User> all = userService.findAll();
         modelMap.addAttribute("users", all);
-        return "all-users";
+        return "user/all-users";
     }
 
     @GetMapping("/save")
     public String saveUser() {
-        return "save-user";
+        return "user/save-user";
     }
 
     @PostMapping("/save")
     public String saveAcc(@ModelAttribute SaveUserRequest userRequest, ModelMap modelMap) {
         if (userRequest.getName().trim().equals("") || userRequest.getName() == null) {
             modelMap.addAttribute("missedName", "Please input user's name");
-            return "save-user";
+            return "user/save-user";
         }
         if (userRequest.getSurname().trim().equals("") || userRequest.getSurname() == null) {
             modelMap.addAttribute("missedSurname", "Please input user's surname");
-            return "save-user";
+            return "user/save-user";
         }
         if (userRequest.getToken().trim().equals("") || userRequest.getToken() == null) {
             modelMap.addAttribute("missedToken", "Please input user's token");
-            return "save-user";
+            return "user/save-user";
         }
         if (userRequest.getUserType() == null) {
             modelMap.addAttribute("missedProfileType", "Please select user's profile type");
-            return "save-user";
+            return "user/save-user";
         }
         User user = mapper.map(userRequest, User.class);
         if (userRequest.getId() != 0) {
@@ -84,7 +80,7 @@ public class UserController {
         }
         User user = userById.get();
         modelMap.addAttribute("user", user);
-        return "edit-user";
+        return "user/edit-user";
     }
 
     @GetMapping("/delete/{id}")
@@ -95,11 +91,5 @@ public class UserController {
         }
         return "redirect:/users";
     }
-
-    @GetMapping("/post")
-    public void post() {
-        this.facebookClient.publish("plantsforcats/feed", //
-                FacebookType.class, //
-                Parameter.with("message", "My first Post from by Java App"));
-    }
 }
+
