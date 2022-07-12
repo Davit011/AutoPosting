@@ -20,5 +20,7 @@ public class SaveUserRequest {
 
     private String token;
 
+    private String profileId;
+
     private String userType;
 }
