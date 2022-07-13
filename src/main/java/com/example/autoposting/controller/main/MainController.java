@@ -11,6 +11,6 @@ public class MainController {
     @GetMapping
     public String mainPage(){
 
-        return "save-user";
+        return "user/save-user";
     }
 }

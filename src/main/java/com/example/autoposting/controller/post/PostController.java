@@ -69,6 +69,6 @@ public class PostController {
                     //do instagram posting
             }
         }
-        return null;
+        return "redirect:/posts";
     }
 }

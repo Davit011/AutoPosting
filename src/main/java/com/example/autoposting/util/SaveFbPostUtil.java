@@ -9,10 +9,13 @@ import com.example.autoposting.service.StatusService;
 import com.example.autoposting.service.UserService;
 import lombok.RequiredArgsConstructor;
 import okhttp3.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -41,41 +44,55 @@ public class SaveFbPostUtil {
         }
 
         User user = userById.get();
-//        OkHttpClient client = new OkHttpClient().newBuilder()
-//                .build();
-//        MediaType mediaType = MediaType.parse("text/plain");
-//        RequestBody body = RequestBody.create(mediaType, "");
-//        Request request = new Request.Builder()
-//                .url("https://graph.facebook.com/" + user.getProfileId() + "/photos?url=" + savePostRequest.getUrl() + "&message=" + savePostRequest.getMessage() + "&access_token=" + user.getToken())
-//                .method("POST", body)
-//                .build();
-//        Response response = client.newCall(request).execute();
-//        System.out.println(response);
-//        boolean successful = response.isSuccessful();
-//
-//        Post savedPost = postService.save(Post.builder()
-//                .text(savePostRequest.getMessage())
-//                .imgUrl(savePostRequest.getUrl())
-//                .status(response.code())
-//                .build());
-//        if (successful) {
-//            statusService.save(Status.builder()
-//                    .text("ok")
-//                    .createdDate(LocalDateTime.now())
-//                    .profileId(user.getProfileId())
-//                    .status(200)
-//                    .token(user.getToken())
-//                    .post(savedPost)
-//                    .build());
-//        } else {
-//            statusService.save(Status.builder()
-//                    .text(response.message())
-//                    .createdDate(LocalDateTime.now())
-//                    .status(response.code())
-//                    .profileId(user.getProfileId())
-//                    .token(user.getToken())
-//                    .post(savedPost)
-//                    .build());
-//        }
+        OkHttpClient client = new OkHttpClient().newBuilder()
+                .build();
+        MediaType mediaType = MediaType.parse("text/plain");
+        RequestBody body = RequestBody.create(mediaType, "");
+        Request request = new Request.Builder()
+                .url("https://graph.facebook.com/" + user.getProfileId() + "/photos?url=" + savePostRequest.getUrl() + "&message=" + savePostRequest.getMessage() + "&access_token=" + user.getToken())
+                .method("POST", body)
+                .build();
+        Response response = client.newCall(request).execute();
+        response.close();
+        System.out.println(response);
+        boolean successful = response.isSuccessful();
+
+        Post savedPost = postService.save(Post.builder()
+                .text(savePostRequest.getMessage())
+                .imgUrl(savePostRequest.getUrl())
+                .status(response.code())
+                .build());
+        if (successful) {
+            statusService.save(Status.builder()
+                    .text("ok")
+                    .createdDate(LocalDateTime.now())
+                    .profileId(user.getProfileId())
+                    .status(200)
+                    .token(user.getToken())
+                    .post(savedPost)
+                    .build());
+        } else {
+            statusService.save(Status.builder()
+                    .text(response.message())
+                    .createdDate(LocalDateTime.now())
+                    .status(response.code())
+                    .profileId(user.getProfileId())
+                    .token(user.getToken())
+                    .post(savedPost)
+                    .build());
+        }
+    }
+
+    public String findLastElement(String tagName, String text, WebElement element) {
+        List<WebElement> spanElements;
+        String accessToken = null;
+        accessToken = element.getText();
+        spanElements = element.findElements(By.tagName(tagName));
+        for (WebElement webElement : spanElements) {
+            if (webElement.getText().contains(text)) {
+                accessToken = findLastElement(tagName, text, webElement);
+            }
+        }
+        return accessToken;
     }
 }

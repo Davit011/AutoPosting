@@ -22,7 +22,6 @@ public class UserController {
 
     @GetMapping
     public String allUsers(ModelMap modelMap) {
-
         List<User> all = userService.findAll();
         modelMap.addAttribute("users", all);
         return "user/all-users";
@@ -52,7 +51,7 @@ public class UserController {
             return "user/save-user";
         }
 
-        if (userRequest.getProfileId() == null) {
+        if (userRequest.getProfileId().trim().equals("") || userRequest.getProfileId() == null) {
             modelMap.addAttribute("missedId", "Please input user's profile id");
             return "user/save-user";
         }
@@ -84,17 +83,14 @@ public class UserController {
 
         userService.save(user);
         return "redirect:/users";
-
     }
-
 
     @GetMapping("/edit/{id}")
     public String editUser(@PathVariable int id, ModelMap modelMap) {
-
         Optional<User> userById = userService.findById(id);
 
         if (userById.isEmpty()) {
-            return "redirect:/users/";
+            return "redirect:/users";
         }
 
         User user = userById.get();
