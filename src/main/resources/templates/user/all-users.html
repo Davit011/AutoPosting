@@ -30,7 +30,6 @@
             <thead>
             <tr>
                <th>Name</th>
-                 <th>Surname</th>
                 <th>Profile Type</th>
                 <th>Actions</th>
             </tr>
@@ -38,7 +37,6 @@
             <tbody>
             <tr th:each="user:${users}">
                 <td th:text="${user.name}"></td>
-                <td th:text="${user.surname}"></td>
                 <td th:text="${user.profileType.toString()}"></td>
                 <td style="text-align: center">
                     <div class="col-sm-12">

@@ -29,6 +29,7 @@
     <div class="col-sm-5">
         <form action="/users/save" method="post">
             <input type="number" name="id" th:value="${user.id}" style="display: none">
+
             <div class="col-sm-12 mx-5 my-2">
                 <p th:if="${missedName} != null" style="color: red" th:text="${missedName}"></p>
                 <p>User's name</p>
@@ -36,15 +37,15 @@
             </div>
 
             <div class="col-sm-12 mx-5 my-2">
-                <p th:if="${missedSurname} != null" style="color: red" th:text="${missedSurname}"></p>
-                <p>User's surname</p>
-                <input class="form-control" type="text" placeholder="Surname" name="surname" th:value="${user.surname}">
-            </div>
-
-            <div class="col-sm-12 mx-5 my-2">
                 <p th:if="${missedToken} != null" style="color: red" th:text="${missedToken}"></p>
                 <p>User's token</p>
                 <input class="form-control" type="text" placeholder="EA1234..." name="token" th:value="${user.token}">
+            </div>
+
+            <div class="col-sm-12 mx-5 my-2">
+                <p th:if="${missedId} != null" style="color: red" th:text="${missedId}"></p>
+                <p>User's Profile id</p>
+                <input class="form-control" type="text" placeholder="Name" name="profileId" th:value="${user.profileId}">
             </div>
 
             <div class="col-sm-12 mx-5 my-2">

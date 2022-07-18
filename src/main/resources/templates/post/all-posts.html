@@ -24,6 +24,17 @@
         <h1>All Posts</h1>
     </div>
 </div>
+<div>
+    <form action="/posts/filter" method="post">
+        <p>Filter</p>
+        <div>
+            <input type="date" name="date">
+            <input type="submit" value="filter">
+        </div>
+
+    </form>
+</div>
+
 <div class="col-sm-12" style="text-align: center">
     <div class="col-sm-5">
         <table class="table table-striped">
@@ -32,22 +43,23 @@
                 <th>text</th>
                 <th>Image URL</th>
                 <th>Status</th>
+                <th>Actions</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="post:${posts}">
-                <td th:text="${post.text}"></td>
-                <td th:text="${post.imgUrl}"></td>
-                <td th:text="${post.status}"></td>
-                <td style="text-align: center">
+                <td th:text="${post.text}" style="border: 1px solid black"></td>
+                <td th:text="${post.imgUrl}" style="border: 1px solid black"></td>
+                <td th:text="${post.status}" style="border: 1px solid black"></td>
+                <td style="text-align: center; border: 1px solid black">
                     <div class="col-sm-12">
                         <div class="mx-2 d-inline-block">
-                            <a th:href="@{'/users/delete/' + ${post.id}}">
+                            <a th:href="@{'/posts/delete/' + ${post.id}}">
                                 <img src="/img/delete.png" width="16px" height="16px">
                             </a>
                         </div>
                         <div class="mx-2 d-inline-block">
-                            <a th:href="@{'/users/edit/' + ${post.id}}">
+                            <a th:href="@{'/posts/edit/' + ${post.id}}">
                                 <img src="/img/editing.png" width="16px" height="16px">
                             </a>
                         </div>

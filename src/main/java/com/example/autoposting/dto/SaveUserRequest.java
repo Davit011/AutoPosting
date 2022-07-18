@@ -15,8 +15,6 @@ public class SaveUserRequest {
 
     private String name;
 
-    private String surname;
-
     private String token;
 
     private String profileId;

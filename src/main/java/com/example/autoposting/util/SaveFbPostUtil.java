@@ -9,13 +9,14 @@ import com.example.autoposting.service.StatusService;
 import com.example.autoposting.service.UserService;
 import lombok.RequiredArgsConstructor;
 import okhttp3.*;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Date;
 import java.util.Optional;
 
 @Component
@@ -27,10 +28,9 @@ public class SaveFbPostUtil {
     private final StatusService statusService;
 
 
-    public void saveFbPost(SavePostRequest savePostRequest, int index) throws IOException {
-        int[] profiles = savePostRequest.getProfiles();
-        String[] postType = savePostRequest.getPostType();
+    public void saveFbPost(SavePostRequest savePostRequest, int index) throws IOException, ParseException {
 
+        int[] profiles = savePostRequest.getProfiles();
         int profile = profiles[index];
         Optional<User> userById = userService.findById(profile);
         if (userById.isEmpty()) {
@@ -41,6 +41,7 @@ public class SaveFbPostUtil {
                     .token(null)
                     .text("User With id " + profile + "not found")
                     .build());
+            return;
         }
 
         User user = userById.get();
@@ -56,11 +57,11 @@ public class SaveFbPostUtil {
         response.close();
         System.out.println(response);
         boolean successful = response.isSuccessful();
-
         Post savedPost = postService.save(Post.builder()
                 .text(savePostRequest.getMessage())
                 .imgUrl(savePostRequest.getUrl())
                 .status(response.code())
+                .createdDate(LocalDateTime.now())
                 .build());
         if (successful) {
             statusService.save(Status.builder()
@@ -81,18 +82,5 @@ public class SaveFbPostUtil {
                     .post(savedPost)
                     .build());
         }
-    }
-
-    public String findLastElement(String tagName, String text, WebElement element) {
-        List<WebElement> spanElements;
-        String accessToken = null;
-        accessToken = element.getText();
-        spanElements = element.findElements(By.tagName(tagName));
-        for (WebElement webElement : spanElements) {
-            if (webElement.getText().contains(text)) {
-                accessToken = findLastElement(tagName, text, webElement);
-            }
-        }
-        return accessToken;
     }
 }

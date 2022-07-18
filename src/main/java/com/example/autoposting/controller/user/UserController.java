@@ -41,11 +41,6 @@ public class UserController {
             return "user/save-user";
         }
 
-        if (userRequest.getSurname().trim().equals("") || userRequest.getSurname() == null) {
-            modelMap.addAttribute("missedSurname", "Please input user's surname");
-            return "user/save-user";
-        }
-
         if (userRequest.getToken().trim().equals("") || userRequest.getToken() == null) {
             modelMap.addAttribute("missedToken", "Please input user's token");
             return "user/save-user";

@@ -30,4 +30,13 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
+    public boolean findByProfileId(String id){
+        Optional<User> byProfileId = userRepository.findByProfileId(id);
+        return byProfileId.isPresent();
+    }
+
+    public Optional<User> findByName(String name){
+        return userRepository.findUserByName(name);
+    }
+
 }

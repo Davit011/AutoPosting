@@ -40,7 +40,6 @@
                             <input type="checkbox" id="checkAll">
                         </th>
                         <th>Name</th>
-                        <th>Surname</th>
                         <th>Profile Type</th>
                         <th>Post Type</th>
 
@@ -52,7 +51,6 @@
                             <input type="checkbox" name="profiles[]" th:value="${user.id}" class="checkedUsers">
                         </td>
                         <td th:text="${user.name}"></td>
-                        <td th:text="${user.surname}"></td>
                         <td th:text="${user.profileType.toString()}"></td>
                         <td>
                             <div class="col-sm-12">

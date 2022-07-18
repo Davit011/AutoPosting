@@ -13,7 +13,16 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 @Controller
@@ -50,7 +59,7 @@ public class PostController {
     }
 
     @PostMapping("/save")
-    public String savePost(@ModelAttribute SavePostRequest savePostRequest, ModelMap modelMap) throws IOException {
+    public String savePost(@ModelAttribute SavePostRequest savePostRequest, ModelMap modelMap) throws IOException, ParseException {
 
         int[] profiles = savePostRequest.getProfiles();
         String[] postType = savePostRequest.getPostType();
@@ -70,5 +79,25 @@ public class PostController {
             }
         }
         return "redirect:/posts";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String singlePost(@PathVariable int id, ModelMap modelMap){
+
+        Optional<Post> byId = postService.findById(id);
+        if(byId.isPresent()){
+            Post post = byId.get();
+            modelMap.addAttribute("post",post);
+            return "post/single-post";
+        }
+        return "redirect:/posts";
+    }
+
+    @PostMapping("/filter")
+    public String filterByDate(@RequestParam LocalDateTime date) throws ParseException {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date parse = formatter.parse(formatter.format(date));
+        System.out.println(parse);
+        return null;
     }
 }

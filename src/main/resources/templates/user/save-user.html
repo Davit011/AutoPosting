@@ -34,12 +34,6 @@
             </div>
 
             <div class="col-sm-12 mx-5 my-2">
-                <p th:if="${missedSurname} != null" style="color: red" th:text="${missedSurname}"></p>
-                <p>User's surname</p>
-                <input class="form-control" type="text" placeholder="Surname" name="surname">
-            </div>
-
-            <div class="col-sm-12 mx-5 my-2">
                 <p th:if="${missedToken} != null" style="color: red" th:text="${missedToken}"></p>
                 <p>User's token</p>
                 <input class="form-control" type="text" placeholder="EA1234..." name="token">
