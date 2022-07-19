@@ -54,35 +54,36 @@ public class CollectUsersController {
         for (int i = 0; i < 100; i++) {
             query.sendKeys(Keys.BACK_SPACE);
         }
-        query.sendKeys("me/accounts?fields=access_token&limit=1");
-        List<WebElement> divElements = driver.findElements(By.tagName("div"));
-        for (WebElement divElement : divElements) {
-            if (divElement.getText().equalsIgnoreCase("Отправить") || divElement.getText().equalsIgnoreCase("submit")) {
-                divElement.click();
-                break;
-            }
-        }
-        new WebDriverWait(driver, Duration.ofMillis(500000)).until(ExpectedConditions.presenceOfElementLocated(By.id("bizBlackBar")));
-        List<String> tokensStr = new ArrayList<>();
-        boolean hasNextPageFound;
-        do {
-            hasNextPageFound = false;
-            List<String> token = explorerUtil.findToken(driver);
-            tokensStr.addAll(token);
-            List<WebElement> driverElements = driver.findElements(By.tagName("a"));
-            for (WebElement driverElement : driverElements) {
-                try {
-                    if (driverElement.getText().contains("access_token") && driverElement.getText().contains("https://graph.facebook.com/") && driverElement.getText().contains("after")) {
-                        hasNextPageFound = true;
-                        driverElement.click();
-                        break;
-                    }
-                } catch (StaleElementReferenceException e) {
-                    continue;
-                }
-            }
-        } while (hasNextPageFound);
-        explorerUtil.saveUsers(driver, tokensStr);
+//        query.sendKeys("me/accounts?fields=access_token&limit=1");
+//        List<WebElement> divElements = driver.findElements(By.tagName("div"));
+//        for (WebElement divElement : divElements) {
+//            if (divElement.getText().equalsIgnoreCase("Отправить") || divElement.getText().equalsIgnoreCase("submit")) {
+//                divElement.click();
+//                break;
+//            }
+//        }
+//        new WebDriverWait(driver, Duration.ofMillis(500000)).until(ExpectedConditions.presenceOfElementLocated(By.id("bizBlackBar")));
+//        List<String> tokensStr = new ArrayList<>();
+//        boolean hasNextPageFound;
+//        do {
+//            hasNextPageFound = false;
+//            List<String> token = explorerUtil.findToken(driver);
+//            tokensStr.addAll(token);
+//            List<WebElement> driverElements = driver.findElements(By.tagName("a"));
+//            for (WebElement driverElement : driverElements) {
+//                try {
+//                    if (driverElement.getText().contains("access_token") && driverElement.getText().contains("https://graph.facebook.com/") && driverElement.getText().contains("after")) {
+//                        hasNextPageFound = true;
+//                        driverElement.click();
+//                        break;
+//                    }
+//                } catch (StaleElementReferenceException e) {
+//                    continue;
+//                }
+//            }
+//        } while (hasNextPageFound);
+//        explorerUtil.saveUsers(driver, tokensStr);
+        explorerUtil.findInstagramUsers(driver);
         return "redirect:/posts/users";
     }
 }

@@ -5,6 +5,9 @@ import com.example.autoposting.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,6 +15,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
+
 
     public List<Post> findAll(){
         return postRepository.findAll();
@@ -27,6 +31,10 @@ public class PostService {
 
     public void deleteById(int id){
         postRepository.deleteById(id);
+    }
+
+    public List<Post> filterByDate(String localDate){
+        return postRepository.findAllByCreatedDate(localDate);
     }
 
 }

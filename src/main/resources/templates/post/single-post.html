@@ -43,6 +43,21 @@
             <hr>
             <p th:text="${post.status}"></p>
         </div>
+        <div class="p-2" style="border: 1px solid black" th:if="${post.user != null}">
+            <h4>User name</h4>
+            <hr>
+            <p th:text="${post.user.name}"></p>
+        </div>
+        <div class="p-2" style="border: 1px solid black" th:if="${post.user != null}">
+            <h4>User FB profile id</h4>
+            <hr>
+            <p th:text="${post.user.profileId}"></p>
+        </div>
+        <div class="p-2" style="border: 1px solid black" th:if="${post.user != null} and ${post.user.instagramId !=  null}">
+            <h4>User instagram profile id</h4>
+            <hr>
+            <p th:text="${post.user.profileId}"></p>
+        </div>
     </div>
 </div>
 </body>

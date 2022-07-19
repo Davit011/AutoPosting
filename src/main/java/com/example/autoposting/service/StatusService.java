@@ -5,6 +5,8 @@ import com.example.autoposting.repository.StatusRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Service
 @RequiredArgsConstructor
 public class StatusService {
@@ -13,5 +15,10 @@ public class StatusService {
     public Status save(Status status){
         return statusRepository.save(status);
     }
+
+    public void deleteById(int id){ statusRepository.deleteById(id); }
+
+    @Transactional
+    public void deleteByPostId(int id){ statusRepository.deleteByPost_Id(id); }
 
 }

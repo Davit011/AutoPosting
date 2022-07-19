@@ -24,86 +24,136 @@
     <div class="col-sm-7 mx-3">
         <div>
             <form action="/posts/save" method="post">
-                    <div>
-                        <p>Text</p>
-                        <input type="text" name="message" class="img-fluid form-control">
-                    </div>
-                    <div>
-                        <p>Image Url</p>
-                        <input type="text" name="url" class="img-fluid form-control">
-                    </div>
+                <div>
+                    <p>Text</p>
+                    <input type="text" name="message" class="img-fluid form-control">
                 </div>
-                <table class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th>
-                            <input type="checkbox" id="checkAll">
-                        </th>
-                        <th>Name</th>
-                        <th>Profile Type</th>
-                        <th>Post Type</th>
-
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="user:${users}">
-                        <td>
-                            <input type="checkbox" name="profiles[]" th:value="${user.id}" class="checkedUsers">
-                        </td>
-                        <td th:text="${user.name}"></td>
-                        <td th:text="${user.profileType.toString()}"></td>
-                        <td>
-                            <div class="col-sm-12">
-                                <div th:if="${user.profileType.toString().equalsIgnoreCase('BOTH')}"
-                                     class="mx-2 d-inline-block">
-                                    <select name="postType[]">
-                                        <option value="instagram">Instagram</option>
-                                        <option value="facebook">Facebook</option>
-                                        <option value="both" selected>Both</option>
-                                    </select>
-                                </div>
-                                <div th:if="${user.profileType.toString().equalsIgnoreCase('INSTAGRAM')}"
-                                     class="mx-2">
-                                    <select name="postType[]">
-                                        <option value="instagram" selected>Instagram</option>
-                                        <option value="facebook" disabled>Facebook</option>
-                                        <option value="both" disabled>Both</option>
-                                    </select>
-                                </div>
-                                <div th:if="${user.profileType.toString().equalsIgnoreCase('FACEBOOK')}"
-                                     class="mx-2">
-                                    <select name="postType[]">
-                                        <option value="instagram" disabled>Instagram</option>
-                                        <option value="facebook" selected>Facebook</option>
-                                        <option value="both" disabled>Both</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-                <button class="form-control card" onmouseenter="this.style.backgroundColor='black'; this.style.color='white';" onmouseleave="this.style.backgroundColor='white'; this.style.color='black';">Post</button>
-            </form>
+                <div>
+                    <p>Image Url</p>
+                    <input type="text" name="url" class="img-fluid form-control">
+                </div>
         </div>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>
+                    <input type="checkbox" id="checkAll" onchange="showSelect(this);">
+                </th>
+                <th>Name</th>
+                <th>Profile Type</th>
+                <th>Post Type</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user:${users}">
+                <td>
+                    <input th:id="'checkbox'+${user.id}" type="checkbox" name="profiles[]" th:value="${user.id}"
+                           class="checkedUsers" onchange="showSelect(this);">
+                </td>
+                <td th:text="${user.name}"></td>
+                <td th:text="${user.profileType.toString()}"></td>
+                <td>
+                    <div class="col-sm-12">
+                        <div th:if="${user.profileType.toString().equalsIgnoreCase('BOTH')}"
+                             class="mx-2 d-inline-block">
+                            <select th:id="'select' + ${user.id}">
+                                <option value="instagram">Instagram</option>
+                                <option value="facebook">Facebook</option>
+                                <option value="both" selected>Both</option>
+                            </select>
+                        </div>
+                        <div th:if="${user.profileType.toString().equalsIgnoreCase('INSTAGRAM')}"
+                             class="mx-2">
+                            <select th:id="'select' + ${user.id}">
+                                <option value="instagram" selected>Instagram</option>
+                                <option value="facebook" disabled>Facebook</option>
+                                <option value="both" disabled>Both</option>
+                            </select>
+                        </div>
+                        <div th:if="${user.profileType.toString().equalsIgnoreCase('FACEBOOK')}"
+                             class="mx-2">
+                            <select th:id="'select' + ${user.id}">
+                                <option value="instagram" disabled>Instagram</option>
+                                <option value="facebook" selected>Facebook</option>
+                                <option value="both" disabled>Both</option>
+                            </select>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <button class="form-control card" onmouseenter="this.style.backgroundColor='black'; this.style.color='white';"
+                onmouseleave="this.style.backgroundColor='white'; this.style.color='black';">Post
+        </button>
+        </form>
     </div>
+</div>
 </div>
 </body>
 </html>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     let checkAllButton = document.getElementById("checkAll");
     checkAllButton.addEventListener("click", function () {
-        if (checkAllButton.checked) {
-            let elementsByClassName = document.getElementsByClassName("checkedUsers");
-            for (const elementByClass of elementsByClassName) {
-                elementByClass.checked = true;
+        let timerInterval;
+        Swal.fire({
+            title: 'Auto close alert!',
+            html: 'Waiting',
+            timer: 1000,
+            timerProgressBar: true,
+            didOpen: () => {
+                Swal.showLoading()
+                const b = Swal.getHtmlContainer().querySelector('b')
+                timerInterval = setInterval(() => {
+                    b.textContent = Swal.getTimerLeft()
+                }, 100)
+            },
+            willClose: () => {
+                clearInterval(timerInterval)
             }
-        } else {
-            let elementsByClassName = document.getElementsByClassName("checkedUsers");
+        }).then((result) => {
+            if (result.dismiss === Swal.DismissReason.timer) {
+                console.log('I was closed by the timer')
+            }
+        })
+        let elementsByClassName = document.getElementsByClassName("checkedUsers");
+        if (!checkAllButton.checked) {
+
             for (const elementByClass of elementsByClassName) {
                 elementByClass.checked = false;
+            }
+        } else {
+            for (const elementByClass of elementsByClassName) {
+                elementByClass.checked = true;
             }
         }
 
     })
+
+    function showSelect(element) {
+        if (element.id === "checkAll") {
+            let elementsByTagName = document.getElementsByTagName("select");
+            if (element.checked) {
+                for (const elementByTagName of elementsByTagName) {
+                    elementByTagName.name = "postType[]"
+                }
+            }else{
+                for (const elementByTagName of elementsByTagName) {
+                    elementByTagName.name = ""
+                }
+            }
+        } else {
+            let id = element.id.substring(8);
+            let elementById = document.getElementById("select" + id);
+
+            if (element.checked) {
+                elementById.name = "postType[]";
+            } else {
+                elementById.name = "";
+            }
+        }
+
+    }
 </script>

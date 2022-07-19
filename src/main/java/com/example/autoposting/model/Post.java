@@ -26,6 +26,13 @@ public class Post {
 
     private int status;
 
-    private LocalDateTime createdDate;
+    private String createdDate;
+
+    @OneToOne
+    private User user;
+
+    private String creationId;
+
+    private String type;
 
 }

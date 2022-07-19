@@ -22,6 +22,8 @@ public class User {
 
     private String profileId;
 
+    private String instagramId;
+
     private String name;
 
     private String token;

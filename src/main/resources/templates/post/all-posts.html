@@ -24,52 +24,181 @@
         <h1>All Posts</h1>
     </div>
 </div>
-<div>
-    <form action="/posts/filter" method="post">
-        <p>Filter</p>
-        <div>
-            <input type="date" name="date">
-            <input type="submit" value="filter">
+<div class="col-sm-12 d-flex">
+    <div class="col-sm-9" style="text-align: left">
+        <div class="col-sm-3 mx-4">
+            <label for="submitRemove">
+                <img src="/img/delete.png" width="32px" height="32px" style="cursor: pointer">
+            </label>
         </div>
-
-    </form>
+    </div>
+    <div style="text-align: right" class="col-sm-2">
+        <form action="/posts/filter" method="post" class="my-2">
+            <div>
+                <input type="date" name="date">
+                <input type="submit" value="filter">
+            </div>
+        </form>
+        <div class="d-flex">
+            <div class="col-sm-12">
+                <input class="form-control" id="search">
+            </div>
+            <div class="my-1 mx-1">
+                <img src="/img/search.svg" width="16px" height="16px" style="cursor: pointer" onclick="search()">
+            </div>
+        </div>
+    </div>
 </div>
-
 <div class="col-sm-12" style="text-align: center">
     <div class="col-sm-5">
         <table class="table table-striped">
             <thead>
             <tr>
+                <th>
+                    <input type="checkbox" id="removeAll">
+                </th>
                 <th>text</th>
                 <th>Image URL</th>
                 <th>Status</th>
+                <th>User</th>
                 <th>Actions</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="post:${posts}">
-                <td th:text="${post.text}" style="border: 1px solid black"></td>
-                <td th:text="${post.imgUrl}" style="border: 1px solid black"></td>
-                <td th:text="${post.status}" style="border: 1px solid black"></td>
-                <td style="text-align: center; border: 1px solid black">
-                    <div class="col-sm-12">
-                        <div class="mx-2 d-inline-block">
-                            <a th:href="@{'/posts/delete/' + ${post.id}}">
-                                <img src="/img/delete.png" width="16px" height="16px">
-                            </a>
+            <div th:each="post:${posts}">
+                <tr th:if="${post.status == 200}" style="background: green">
+                    <td style="border: 1px solid black">
+                        <input type="checkbox" th:value="${post.id}" class="removedUsers" onchange="removePost(this);">
+                    </td>
+                    <td th:text="${post.text}" style="border: 1px solid black"></td>
+                    <td th:text="${post.imgUrl}" style="border: 1px solid black"></td>
+                    <td th:text="${post.status}" style="border: 1px solid black"></td>
+                    <td th:if="${post.user != null}" th:text="${post.user.name}" style="border: 1px solid black"></td>
+                    <td th:if="${post.user == null}" style="border: 1px solid black">Empty</td>
+                    <td style="text-align: center; border: 1px solid black">
+                        <div class="col-sm-12">
+                            <div class="mx-2 d-inline-block">
+                                <a th:href="@{'/posts/delete/' + ${post.id}}">
+                                    <img src="/img/delete.png" width="16px" height="16px">
+                                </a>
+                            </div>
+                            <div class="mx-2 d-inline-block">
+                                <a th:href="@{'/posts/edit/' + ${post.id}}">
+                                    <img src="/img/editing.png" width="16px" height="16px">
+                                </a>
+                            </div>
                         </div>
-                        <div class="mx-2 d-inline-block">
-                            <a th:href="@{'/posts/edit/' + ${post.id}}">
-                                <img src="/img/editing.png" width="16px" height="16px">
-                            </a>
+                    </td>
+                </tr>
+                <tr th:if="${post.status != 200}" style="background: red">
+                    <td style="border: 1px solid black">
+                        <input type="checkbox" th:value="${post.id}" class="removedUsers" onchange="removePost(this);">
+                    </td>
+                    <td th:text="${post.text}" style="border: 1px solid black"></td>
+                    <td th:text="${post.imgUrl}" style="border: 1px solid black"></td>
+                    <td th:text="${post.status}" style="border: 1px solid black"></td>
+                    <td th:if="${post.user != null}" th:text="${post.user.name}" style="border: 1px solid black"></td>
+                    <td th:if="${post.user == null}" style="border: 1px solid black">Empty</td>
+                    <td style="text-align: center; border: 1px solid black">
+                        <div class="col-sm-12">
+                            <div class="mx-2 d-inline-block">
+                                <a th:href="@{'/posts/delete/' + ${post.id}}">
+                                    <img src="/img/delete.png" width="16px" height="16px">
+                                </a>
+                            </div>
+                            <div class="mx-2 d-inline-block">
+                                <a th:href="@{'/posts/edit/' + ${post.id}}">
+                                    <img src="/img/editing.png" width="16px" height="16px">
+                                </a>
+                            </div>
                         </div>
-                    </div>
-                </td>
-            </tr>
+                    </td>
+                </tr>
+            </div>
             </tbody>
         </table>
+        <form action="/posts/delete" method="post" style="display: none" id="removeForm">
+            <div id="removedPosts">
+
+            </div>
+            <input type="submit" id="submitRemove">
+        </form>
     </div>
 </div>
 
 </body>
 </html>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    let removeAllButton = document.getElementById("removeAll");
+    removeAllButton.addEventListener("click", function () {
+        let timerInterval;
+        Swal.fire({
+            title: 'Auto close alert!',
+            html: 'Waiting',
+            timer: 1000,
+            timerProgressBar: true,
+            didOpen: () => {
+                Swal.showLoading()
+                const b = Swal.getHtmlContainer().querySelector('b')
+                timerInterval = setInterval(() => {
+                    b.textContent = Swal.getTimerLeft()
+                }, 100)
+            },
+            willClose: () => {
+                clearInterval(timerInterval)
+            }
+        }).then((result) => {
+            if (result.dismiss === Swal.DismissReason.timer) {
+                console.log('I was closed by the timer')
+            }
+        })
+        let elementsByClassName = document.getElementsByClassName("removedUsers");
+        if (!removeAllButton.checked) {
+            for (const elementByClass of elementsByClassName) {
+                elementByClass.checked = false;
+                removePost(elementByClass);
+            }
+        } else {
+            for (const elementByClass of elementsByClassName) {
+                elementByClass.checked = true;
+                removePost(elementByClass);
+            }
+        }
+
+    })
+
+    function removePost(element) {
+        let removedPosts = document.getElementById("removedPosts");
+        let checked = element.checked;
+        if (checked) {
+            let input = document.createElement("input");
+            input.name = "removedPost[]"
+            input.type = "text"
+            input.value = element.value;
+            input.id = "delete" + element.value;
+            removedPosts.appendChild(input);
+        } else {
+            document.getElementById("delete" + element.value).remove();
+        }
+    }
+
+    function submitForm() {
+        document.getElementById("removeForm").submit();
+    }
+
+    function search(){
+        let elementById = document.getElementById("search");
+        let elementsByTagName = document.getElementsByTagName("tr");
+        for (const elementByTagName of elementsByTagName) {
+            elementByTagName.style.display = "none";
+        }
+        for (const elementByTagName of elementsByTagName) {
+            console.log(elementByTagName.innerText + "td")
+            console.log(elementById.value + "search")
+            if(elementByTagName.innerText.includes(elementById.value)){
+                elementByTagName.style.display = "revert";
+            }
+        }
+    }
+</script>

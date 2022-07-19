@@ -7,6 +7,7 @@ import com.example.autoposting.service.TokenService;
 import com.example.autoposting.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -25,7 +26,7 @@ public class ExplorerUtil {
     private final UserService userService;
     private final TokenService tokenService;
 
-    public List<String> findToken(ChromeDriver driver){
+    public List<String> findToken(ChromeDriver driver) {
         new WebDriverWait(driver, Duration.ofMillis(100000)).until(ExpectedConditions.presenceOfElementLocated(By.tagName("br")));
         int iterIndex = 0;
         List<WebElement> driverElements = driver.findElements(By.tagName("div"));
@@ -48,19 +49,19 @@ public class ExplorerUtil {
         }
         List<String> tokensStr = new ArrayList<>();
         for (WebElement tokenDiv : tokenDivs) {
-                String token = tokenDiv.getText().split(":")[1];
-                String substring1 = token.trim().substring(1, token.length() - 3);
-            if(substring1.contains("EAA")){
-                            tokensStr.add(substring1);
-                            tokenService.save(Token.builder()
-                                    .token(substring1)
-                                    .build());
+            String token = tokenDiv.getText().split(":")[1];
+            String substring1 = token.trim().substring(1, token.length() - 3);
+            if (substring1.contains("EAA")) {
+                tokensStr.add(substring1);
+                tokenService.save(Token.builder()
+                        .token(substring1)
+                        .build());
             }
         }
         return tokensStr;
     }
 
-    public void saveUsers(ChromeDriver driver, List<String> tokensStr){
+    public void saveUsers(ChromeDriver driver, List<String> tokensStr) {
         for (String singleToken : tokensStr) {
             driver.get("https://developers.facebook.com/tools/debug/accesstoken/");
             try {
@@ -94,7 +95,7 @@ public class ExplorerUtil {
                                 String[] info = spanTag.getText().split(":");
                                 String id = info[0].trim();
                                 String fullName = info[1].trim();
-                                if(userService.findByProfileId(id)){
+                                if (userService.findByProfileId(id)) {
                                     continue;
                                 }
                                 for (WebElement webElement : longTimeToken) {
@@ -112,9 +113,57 @@ public class ExplorerUtil {
                         }
                     }
                 }
-            }catch(StaleElementReferenceException e){
+            } catch (StaleElementReferenceException e) {
                 continue;
             }
+        }
+    }
+
+    public void findInstagramUsers(ChromeDriver driver) {
+        //        String ps = "MBS97facebook";
+        String ps = "DAVO3032001";
+        List<User> users = userService.findAll();
+        for (User user : users) {
+            String profileId = user.getProfileId();
+            driver.get("https://developers.facebook.com/tools/explorer");
+            driver.manage().window().maximize();
+            List<WebElement> aTagElements = driver.findElements(By.tagName("a"));
+            for (WebElement aTagElement : aTagElements) {
+                if (aTagElement.getText().equalsIgnoreCase("log in")) {
+                    aTagElement.click();
+                    break;
+                }
+            }
+
+            new WebDriverWait(driver, Duration.ofMillis(500000)).until(ExpectedConditions.presenceOfElementLocated(By.name("q")));
+            WebElement query = driver.findElement(By.className("_58al"));
+            query.click();
+            for (int i = 0; i < 100; i++) {
+                query.sendKeys(Keys.BACK_SPACE);
+            }
+            query.sendKeys(profileId + "?fields=instagram_business_account");
+            List<WebElement> divElements = driver.findElements(By.tagName("div"));
+            for (WebElement divElement : divElements) {
+                if (divElement.getAttribute("className").equals("_43rl") && divElement.getText().equalsIgnoreCase("Отправить") || divElement.getText().equalsIgnoreCase("submit")) {
+                    divElement.click();
+                    break;
+                }
+            }
+            new WebDriverWait(driver, Duration.ofMillis(500000)).until(ExpectedConditions.presenceOfElementLocated(By.className("paneContent")));
+            List<WebElement> driverElements = driver.findElements(By.tagName("div"));
+            for (WebElement driverElement : driverElements) {
+                try {
+                    if (driverElement.getText().contains("\"instagram_business_account\"") && !driverElement.getText().contains("fields") && driverElement.getAttribute("className").equals("_68w8")) {
+                        WebElement aTag = driverElement.findElement(By.tagName("a"));
+                        user.setInstagramId(aTag.getText());
+                        user.setProfileType(UserType.BOTH);
+                        userService.save(user);
+                    }
+                } catch (StaleElementReferenceException e) {
+                    continue;
+                }
+            }
+            continue;
         }
     }
 

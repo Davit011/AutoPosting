@@ -12,7 +12,6 @@ import okhttp3.*;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,7 +20,7 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class SaveFbPostUtil {
+public class SaveInstagramPostUtil {
 
     private final UserService userService;
     private final PostService postService;
@@ -29,8 +28,8 @@ public class SaveFbPostUtil {
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-    public void saveFbPost(SavePostRequest savePostRequest, int index) throws IOException, ParseException {
 
+    public void saveInstaPost(SavePostRequest savePostRequest, int index) throws IOException {
         int[] profiles = savePostRequest.getProfiles();
         int profile = profiles[index];
         Optional<User> userById = userService.findById(profile);
@@ -51,22 +50,31 @@ public class SaveFbPostUtil {
         MediaType mediaType = MediaType.parse("text/plain");
         RequestBody body = RequestBody.create(mediaType, "");
         Request request = new Request.Builder()
-                .url("https://graph.facebook.com/" + user.getProfileId() + "/photos?url=" + savePostRequest.getUrl() + "&message=" + savePostRequest.getMessage() + "&access_token=" + user.getToken())
+                .url("https://graph.facebook.com/" + user.getInstagramId() + "/media?image_url=" + savePostRequest.getUrl() + "&caption=" + savePostRequest.getMessage() + "&access_token=" + user.getToken())
                 .method("POST", body)
                 .build();
         Response response = client.newCall(request).execute();
         String creationResponse = response.body().string();
-        String creationId = creationResponse.split(",")[1].split(":")[1].substring(1, creationResponse.split(",")[1].split(":")[1].length() - 2);
+        String creationId = creationResponse.split(":")[1].substring(1, creationResponse.split(":")[1].length() - 2);
         response.close();
-        boolean successful = response.isSuccessful();
+        Request request1 = new Request.Builder()
+                .url("https://graph.facebook.com/" + user.getInstagramId() + "/media_publish?creation_id=" + creationId + "&access_token=" + user.getToken())
+                .method("POST", body)
+                .build();
+        Response response1 = client.newCall(request1).execute();
+        System.out.println(response1);
+        String creationResponse1 = response1.body().string();
+        String creationId1 = creationResponse1.split(":")[1].substring(1, creationResponse1.split(":")[1].length() - 2);
+        response1.close();
+        boolean successful = response1.isSuccessful();
         Post savedPost = postService.save(Post.builder()
                 .text(savePostRequest.getMessage())
                 .imgUrl(savePostRequest.getUrl())
-                .status(response.code())
+                .status(response1.code())
                 .createdDate(sdf.format(new Date()))
                 .user(user)
-                .creationId(creationId)
-                .type("Facebook")
+                .creationId(creationId1)
+                .type("Instagram")
                 .build());
         if (successful) {
             statusService.save(Status.builder()
@@ -79,13 +87,14 @@ public class SaveFbPostUtil {
                     .build());
         } else {
             statusService.save(Status.builder()
-                    .text(response.message())
+                    .text(response1.message())
                     .createdDate(LocalDateTime.now())
-                    .status(response.code())
+                    .status(response1.code())
                     .profileId(user.getProfileId())
                     .token(user.getToken())
                     .post(savedPost)
                     .build());
         }
     }
+
 }
