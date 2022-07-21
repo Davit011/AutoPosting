@@ -117,6 +117,7 @@ public class ExplorerUtil {
             }
         }
     }
+
     public void saveUsersFromDb(ChromeDriver driver) {
         List<Token> all = tokenService.findAll();
 
@@ -224,6 +225,7 @@ public class ExplorerUtil {
             continue;
         }
     }
+
     public void findInstagramUsersFromDb(ChromeDriver driver) {
         String ps = "MBS97facebook";
 //        String ps = "DAVO3032001";
@@ -250,8 +252,7 @@ public class ExplorerUtil {
             query.sendKeys(Keys.BACK_SPACE);
         }
         List<User> users = userService.findAll();
-        for (int i = 628; i < users.size(); i++) {
-            User user = users.get(i);
+        for (User user : users) {
             String profileId = user.getProfileId();
             driver.get("https://developers.facebook.com/tools/explorer");
             driver.manage().window().maximize();
@@ -266,7 +267,7 @@ public class ExplorerUtil {
             new WebDriverWait(driver, Duration.ofMillis(500000)).until(ExpectedConditions.presenceOfElementLocated(By.name("q")));
             WebElement query1 = driver.findElement(By.className("_58al"));
             query1.click();
-            for (int j = 0; j < 100; i++) {
+            for (int i = 0; i < 100; i++) {
                 query1.sendKeys(Keys.BACK_SPACE);
             }
             query1.sendKeys(profileId + "?fields=instagram_business_account");
