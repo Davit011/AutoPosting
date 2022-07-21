@@ -16,4 +16,7 @@ public class TokenService {
     public Token save(Token token){
         return tokenRepository.save(token);
     }
+
+    public List<Token> findAll(){ return tokenRepository.findAll(); }
+
 }

@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Active Users</title>
+</head>
+<body>
+<p th:text="${users.size()}"></p>
+  <div th:each="user:${users}">
+    <p th:text="${user.name}"></p>
+  </div>
+</body>
+</html>

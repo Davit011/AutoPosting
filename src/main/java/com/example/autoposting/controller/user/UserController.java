@@ -22,8 +22,9 @@ public class UserController {
 
     @GetMapping
     public String allUsers(ModelMap modelMap) {
-        List<User> all = userService.findAll();
-        modelMap.addAttribute("users", all);
+        modelMap.addAttribute("users", userService.findAllUsers());
+        modelMap.addAttribute("canada",userService.findAllCanadaCategory());
+        modelMap.addAttribute("loan",userService.findAllByLoanCategory());
         return "user/all-users";
 
     }

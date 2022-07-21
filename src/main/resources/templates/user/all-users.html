@@ -26,16 +26,83 @@
 </div>
 <div class="col-sm-12" style="text-align: center">
     <div class="col-sm-5">
+        <h1>All</h1>
         <table class="table table-striped">
             <thead>
             <tr>
-               <th>Name</th>
+                <th>Name</th>
                 <th>Profile Type</th>
                 <th>Actions</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="user:${users}">
+                <td th:text="${user.name}"></td>
+                <td th:text="${user.profileType.toString()}"></td>
+                <td style="text-align: center">
+                    <div class="col-sm-12">
+                        <div class="mx-2 d-inline-block">
+                            <a th:href="@{'/users/delete/' + ${user.id}}">
+                                <img src="/img/delete.png" width="16px" height="16px">
+                            </a>
+                        </div>
+                        <div class="mx-2 d-inline-block">
+                            <a th:href="@{'/users/edit/' + ${user.id}}">
+                                <img src="/img/editing.png" width="16px" height="16px">
+                            </a>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-sm-5">
+        <h1>Canada</h1>
+        <p th:text="${canada.size()}"></p>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Profile Type</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user:${canada}">
+                <td th:text="${user.name}"></td>
+                <td th:text="${user.profileType.toString()}"></td>
+                <td style="text-align: center">
+                    <div class="col-sm-12">
+                        <div class="mx-2 d-inline-block">
+                            <a th:href="@{'/users/delete/' + ${user.id}}">
+                                <img src="/img/delete.png" width="16px" height="16px">
+                            </a>
+                        </div>
+                        <div class="mx-2 d-inline-block">
+                            <a th:href="@{'/users/edit/' + ${user.id}}">
+                                <img src="/img/editing.png" width="16px" height="16px">
+                            </a>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-sm-5">
+        <h1>loan</h1>
+        <p th:text="${loan.size()}"></p>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Profile Type</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user:${loan}">
                 <td th:text="${user.name}"></td>
                 <td th:text="${user.profileType.toString()}"></td>
                 <td style="text-align: center">

@@ -63,8 +63,9 @@ public class PostController {
 
     @GetMapping("/users")
     public String posting(ModelMap modelMap) {
-        List<User> users = userService.findAll();
-        modelMap.addAttribute("users", users);
+        modelMap.addAttribute("users", userService.findAllUsersByStatus());
+        modelMap.addAttribute("canada",userService.findAllCanadaCategoryAndStatus());
+        modelMap.addAttribute("loan",userService.findAllByLoanCategoryAndStatus());
         return "user/choose-users";
     }
 

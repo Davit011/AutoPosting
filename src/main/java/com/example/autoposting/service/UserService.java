@@ -1,6 +1,8 @@
 package com.example.autoposting.service;
 
 import com.example.autoposting.model.User;
+import com.example.autoposting.model.UserCategory;
+import com.example.autoposting.model.UserStatus;
 import com.example.autoposting.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -37,6 +39,32 @@ public class UserService {
 
     public Optional<User> findByName(String name){
         return userRepository.findUserByName(name);
+    }
+
+    public List<User> findCheckedUsers(){ return userRepository.findAllByIsChecked(true); }
+
+    public List<User> findAllUsers(){
+        return userRepository.findAllByCategoryIsNull();
+    }
+
+    public List<User> findAllCanadaCategory(){
+        return userRepository.findAllByCategory(UserCategory.CANADA);
+    }
+
+    public List<User> findAllByLoanCategory(){
+        return userRepository.findAllByCategory(UserCategory.LOAN);
+    }
+
+    public List<User> findAllUsersByStatus(){
+        return userRepository.findAllByCategoryIsNullAndAndStatus(UserStatus.ACTIVE);
+    }
+
+    public List<User> findAllCanadaCategoryAndStatus(){
+        return userRepository.findAllByCategoryAndStatus(UserCategory.CANADA, UserStatus.ACTIVE);
+    }
+
+    public List<User> findAllByLoanCategoryAndStatus(){
+        return userRepository.findAllByCategoryAndStatus(UserCategory.LOAN,UserStatus.ACTIVE);
     }
 
 }

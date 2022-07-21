@@ -32,62 +32,170 @@
                     <p>Image Url</p>
                     <input type="text" name="url" class="img-fluid form-control">
                 </div>
-        </div>
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>
-                    <input type="checkbox" id="checkAll" onchange="showSelect(this);">
-                </th>
-                <th>Name</th>
-                <th>Profile Type</th>
-                <th>Post Type</th>
+                <h1>All</h1>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" id="checkAll" onchange="showSelect(this);">
+                        </th>
+                        <th>Name</th>
+                        <th>Profile Type</th>
+                        <th>Post Type</th>
 
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="user:${users}">
-                <td>
-                    <input th:id="'checkbox'+${user.id}" type="checkbox" name="profiles[]" th:value="${user.id}"
-                           class="checkedUsers" onchange="showSelect(this);">
-                </td>
-                <td th:text="${user.name}"></td>
-                <td th:text="${user.profileType.toString()}"></td>
-                <td>
-                    <div class="col-sm-12">
-                        <div th:if="${user.profileType.toString().equalsIgnoreCase('BOTH')}"
-                             class="mx-2 d-inline-block">
-                            <select th:id="'select' + ${user.id}">
-                                <option value="instagram">Instagram</option>
-                                <option value="facebook">Facebook</option>
-                                <option value="both" selected>Both</option>
-                            </select>
-                        </div>
-                        <div th:if="${user.profileType.toString().equalsIgnoreCase('INSTAGRAM')}"
-                             class="mx-2">
-                            <select th:id="'select' + ${user.id}">
-                                <option value="instagram" selected>Instagram</option>
-                                <option value="facebook" disabled>Facebook</option>
-                                <option value="both" disabled>Both</option>
-                            </select>
-                        </div>
-                        <div th:if="${user.profileType.toString().equalsIgnoreCase('FACEBOOK')}"
-                             class="mx-2">
-                            <select th:id="'select' + ${user.id}">
-                                <option value="instagram" disabled>Instagram</option>
-                                <option value="facebook" selected>Facebook</option>
-                                <option value="both" disabled>Both</option>
-                            </select>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-        <button class="form-control card" onmouseenter="this.style.backgroundColor='black'; this.style.color='white';"
-                onmouseleave="this.style.backgroundColor='white'; this.style.color='black';">Post
-        </button>
-        </form>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="user:${users}">
+                        <td>
+                            <input th:id="'checkbox'+${user.id}" type="checkbox" name="profiles[]" th:value="${user.id}"
+                                   class="checkedUsers" onchange="showSelect(this);">
+                        </td>
+                        <td th:text="${user.name}"></td>
+                        <td th:text="${user.profileType.toString()}"></td>
+                        <td>
+                            <div class="col-sm-12">
+                                <div th:if="${user.profileType.toString().equalsIgnoreCase('BOTH')}"
+                                     class="mx-2 d-inline-block">
+                                    <select th:id="'select' + ${user.id}">
+                                        <option value="instagram">Instagram</option>
+                                        <option value="facebook">Facebook</option>
+                                        <option value="both" selected>Both</option>
+                                    </select>
+                                </div>
+                                <div th:if="${user.profileType.toString().equalsIgnoreCase('INSTAGRAM')}"
+                                     class="mx-2">
+                                    <select th:id="'select' + ${user.id}">
+                                        <option value="instagram" selected>Instagram</option>
+                                        <option value="facebook" disabled>Facebook</option>
+                                        <option value="both" disabled>Both</option>
+                                    </select>
+                                </div>
+                                <div th:if="${user.profileType.toString().equalsIgnoreCase('FACEBOOK')}"
+                                     class="mx-2">
+                                    <select th:id="'select' + ${user.id}" class="all">
+                                        <option value="instagram" disabled>Instagram</option>
+                                        <option value="facebook" selected>Facebook</option>
+                                        <option value="both" disabled>Both</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <h1>Canada</h1>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" id="checkAllCanada" onchange="showCanadaSelect(this);">
+                        </th>
+                        <th>Name</th>
+                        <th>Profile Type</th>
+                        <th>Post Type</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="user:${canada}">
+                        <td>
+                            <input th:id="'checkbox'+${user.id}" type="checkbox" name="profiles[]" th:value="${user.id}"
+                                   class="checkedCanadaUsers" onchange="showCanadaSelect(this);">
+                        </td>
+                        <td th:text="${user.name}"></td>
+                        <td th:text="${user.profileType.toString()}"></td>
+                        <td>
+                            <div class="col-sm-12">
+                                <div th:if="${user.profileType.toString().equalsIgnoreCase('BOTH')}"
+                                     class="mx-2 d-inline-block">
+                                    <select th:id="'select' + ${user.id}" class="canada">
+                                        <option value="instagram">Instagram</option>
+                                        <option value="facebook">Facebook</option>
+                                        <option value="both" selected>Both</option>
+                                    </select>
+                                </div>
+                                <div th:if="${user.profileType.toString().equalsIgnoreCase('INSTAGRAM')}"
+                                     class="mx-2">
+                                    <select th:id="'select' + ${user.id}">
+                                        <option value="instagram" selected>Instagram</option>
+                                        <option value="facebook" disabled>Facebook</option>
+                                        <option value="both" disabled>Both</option>
+                                    </select>
+                                </div>
+                                <div th:if="${user.profileType.toString().equalsIgnoreCase('FACEBOOK')}"
+                                     class="mx-2">
+                                    <select th:id="'select' + ${user.id}">
+                                        <option value="instagram" disabled>Instagram</option>
+                                        <option value="facebook" selected>Facebook</option>
+                                        <option value="both" disabled>Both</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <h1>Loan</h1>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" id="checkAllLoan" onchange="showLoanSelect(this);">
+                        </th>
+                        <th>Name</th>
+                        <th>Profile Type</th>
+                        <th>Post Type</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="user:${loan}">
+                        <td>
+                            <input th:id="'checkbox'+${user.id}" type="checkbox" name="profiles[]" th:value="${user.id}"
+                                   class="checkedLoanUsers" onchange="showLoanSelect(this);">
+                        </td>
+                        <td th:text="${user.name}"></td>
+                        <td th:text="${user.profileType.toString()}"></td>
+                        <td>
+                            <div class="col-sm-12">
+                                <div th:if="${user.profileType.toString().equalsIgnoreCase('BOTH')}"
+                                     class="mx-2 d-inline-block">
+                                    <select th:id="'select' + ${user.id}">
+                                        <option value="instagram">Instagram</option>
+                                        <option value="facebook">Facebook</option>
+                                        <option value="both" selected>Both</option>
+                                    </select>
+                                </div>
+                                <div th:if="${user.profileType.toString().equalsIgnoreCase('INSTAGRAM')}"
+                                     class="mx-2">
+                                    <select th:id="'select' + ${user.id}" class="loan">
+                                        <option value="instagram" selected>Instagram</option>
+                                        <option value="facebook" disabled>Facebook</option>
+                                        <option value="both" disabled>Both</option>
+                                    </select>
+                                </div>
+                                <div th:if="${user.profileType.toString().equalsIgnoreCase('FACEBOOK')}"
+                                     class="mx-2">
+                                    <select th:id="'select' + ${user.id}">
+                                        <option value="instagram" disabled>Instagram</option>
+                                        <option value="facebook" selected>Facebook</option>
+                                        <option value="both" disabled>Both</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <button class="form-control card"
+                        onmouseenter="this.style.backgroundColor='black'; this.style.color='white';"
+                        onmouseleave="this.style.backgroundColor='white'; this.style.color='black';">Post
+                </button>
+            </form>
+        </div>
     </div>
 </div>
 </div>
@@ -132,14 +240,137 @@
 
     })
 
+    let checkAllButton1 = document.getElementById("checkAllCanada");
+    checkAllButton1.addEventListener("click", function () {
+        let timerInterval1;
+        Swal.fire({
+            title: 'Auto close alert!',
+            html: 'Waiting',
+            timer: 1000,
+            timerProgressBar: true,
+            didOpen: () => {
+                Swal.showLoading()
+                const b = Swal.getHtmlContainer().querySelector('b')
+                timerInterval1 = setInterval(() => {
+                    b.textContent = Swal.getTimerLeft()
+                }, 100)
+            },
+            willClose: () => {
+                clearInterval(timerInterval1)
+            }
+        }).then((result) => {
+            if (result.dismiss === Swal.DismissReason.timer) {
+                console.log('I was closed by the timer')
+            }
+        })
+        let elementsByClassName = document.getElementsByClassName("checkedCanadaUsers");
+        if (!checkAllButton1.checked) {
+
+            for (const elementByClass of elementsByClassName) {
+                elementByClass.checked = false;
+            }
+        } else {
+            for (const elementByClass of elementsByClassName) {
+                elementByClass.checked = true;
+            }
+        }
+
+    })
+
+    let checkAllButton2 = document.getElementById("checkAllLoan");
+    checkAllButton2.addEventListener("click", function () {
+        let timerInterval2;
+        Swal.fire({
+            title: 'Auto close alert!',
+            html: 'Waiting',
+            timer: 1000,
+            timerProgressBar: true,
+            didOpen: () => {
+                Swal.showLoading()
+                const b = Swal.getHtmlContainer().querySelector('b')
+                timerInterval2 = setInterval(() => {
+                    b.textContent = Swal.getTimerLeft()
+                }, 100)
+            },
+            willClose: () => {
+                clearInterval(timerInterval2)
+            }
+        }).then((result) => {
+            if (result.dismiss === Swal.DismissReason.timer) {
+                console.log('I was closed by the timer')
+            }
+        })
+        let elementsByClassName = document.getElementsByClassName("checkedLoanUsers");
+        if (!checkAllButton2.checked) {
+            for (const elementByClass of elementsByClassName) {
+                elementByClass.checked = false;
+            }
+        } else {
+            for (const elementByClass of elementsByClassName) {
+                elementByClass.checked = true;
+            }
+        }
+
+    })
+
     function showSelect(element) {
         if (element.id === "checkAll") {
-            let elementsByTagName = document.getElementsByTagName("select");
+            let elementsByTagName = document.getElementsByClassName("all");
             if (element.checked) {
                 for (const elementByTagName of elementsByTagName) {
                     elementByTagName.name = "postType[]"
                 }
-            }else{
+            } else {
+                for (const elementByTagName of elementsByTagName) {
+                    elementByTagName.name = ""
+                }
+            }
+        } else {
+            let id = element.id.substring(8);
+            let elementById = document.getElementById("select" + id);
+
+            if (element.checked) {
+                elementById.name = "postType[]";
+            } else {
+                elementById.name = "";
+            }
+        }
+
+    }
+
+    function showCanadaSelect(element) {
+        if (element.id === "checkAllCanada") {
+            let elementsByTagName = document.getElementsByClassName("canada");
+            if (element.checked) {
+                for (const elementByTagName of elementsByTagName) {
+                    elementByTagName.name = "postType[]"
+                }
+            } else {
+                for (const elementByTagName of elementsByTagName) {
+                    elementByTagName.name = ""
+                }
+            }
+        } else {
+            let id = element.id.substring(8);
+            let elementById = document.getElementById("select" + id);
+
+            if (element.checked) {
+                elementById.name = "postType[]";
+            } else {
+                elementById.name = "";
+            }
+        }
+
+    }
+
+    function showLoanSelect(element) {
+        if (element.id === "checkAllLoan") {
+            let elementsByTagName = document.getElementsByClassName("loan");
+            if (element.checked) {
+                for (const elementByTagName of elementsByTagName) {
+                    elementByTagName.name = "postType[]"
+                }
+            } else {
                 for (const elementByTagName of elementsByTagName) {
                     elementByTagName.name = ""
                 }

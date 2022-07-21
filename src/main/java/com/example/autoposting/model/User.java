@@ -28,9 +28,13 @@ public class User {
 
     private String token;
 
+    @Enumerated(EnumType.STRING)
     private UserType profileType;
 
-    @ManyToOne
-    private Category category;
+    @Enumerated(EnumType.STRING)
+    private UserCategory category;
 
+    private boolean isChecked;
+
+    private UserStatus status;
 }
