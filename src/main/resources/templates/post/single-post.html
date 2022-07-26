@@ -53,10 +53,12 @@
             <hr>
             <p th:text="${post.user.profileId}"></p>
         </div>
-        <div class="p-2" style="border: 1px solid black" th:if="${post.user != null} and ${post.user.instagramId !=  null}">
+        <div class="p-2" style="border: 1px solid black"
+             th:if="${post.user != null} and ${post.user.instagramId !=  null}">
             <h4>User instagram profile id</h4>
             <hr>
-            <p th:text="${post.user.profileId}"></p>
+            <p th:text="${post.user.instagramId}" th:if="${post.user.instagramId != null}"></p>
+            <p th:if="${post.user.instagramId == null}"></p>
         </div>
     </div>
 </div>

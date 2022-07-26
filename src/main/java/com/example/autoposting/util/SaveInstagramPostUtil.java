@@ -56,6 +56,7 @@ public class SaveInstagramPostUtil {
         String creationResponse = response.body().string();
         String creationId = creationResponse.split(":")[1].substring(1, creationResponse.split(":")[1].length() - 2);
         response.close();
+        System.out.println(response);
         Request request1 = new Request.Builder()
                 .url("https://graph.facebook.com/" + user.getInstagramId() + "/media_publish?creation_id=" + creationId + "&access_token=" + user.getToken())
                 .method("POST", body)
