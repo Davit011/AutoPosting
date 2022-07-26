@@ -1,6 +1,8 @@
 package com.example.autoposting.controller.user;
 
 import com.example.autoposting.dto.LoginRequest;
+import com.example.autoposting.model.User;
+import com.example.autoposting.service.UserService;
 import com.example.autoposting.util.ExplorerUtil;
 import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.By;
@@ -10,10 +12,10 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.time.Duration;
@@ -26,19 +28,19 @@ import java.util.List;
 public class CollectUsersController {
 
     private final ExplorerUtil explorerUtil;
+    @Value("${key.driver}")
+    private String driverPath;
+
+    private final UserService userService;
 
 //    @GetMapping("/collect")
 //    public String collectPage() {
 //        return "user/login";
 //    }
 
-    @GetMapping("/collect")
-    public String collectUsers(@ModelAttribute LoginRequest loginRequest) {
-
-        String ps = "MBS97facebook";
-//        String ps = "DAVO3032001";
-        System.setProperty("webdriver.chrome.driver", "C:\\Users\\Kraken\\IdeaProjects\\AutoPosting\\src\\main\\resources\\static\\SeleniumWebDriver\\chromedriver.exe");
-        ChromeDriver driver = new ChromeDriver();
+    public void login(ChromeDriver driver) {
+//        String ps = "MBS97facebook";
+        String ps = "DAVO3032001";
         driver.get("https://developers.facebook.com/tools/explorer/?method=GET&path=me%2Faccounts&version=v14.0");
         driver.manage().window().maximize();
         List<WebElement> aTagElements = driver.findElements(By.tagName("a"));
@@ -51,10 +53,27 @@ public class CollectUsersController {
         new WebDriverWait(driver, Duration.ofMillis(500000)).until(ExpectedConditions.presenceOfElementLocated(By.name("email")));
         WebElement email = driver.findElement(By.name("email"));
         WebElement pass = driver.findElement(By.name("pass"));
-        email.sendKeys("093094127");
-//        email.sendKeys("+37495136352");
+//        email.sendKeys("093094127");
+        email.sendKeys("+37495136352");
         pass.sendKeys(ps);
         driver.findElement(By.name("login")).click();
+    }
+
+    @GetMapping("s")
+    public String a(){
+        List<User> all = userService.findAll();
+        for (User user : all) {
+            user.setChecked(false);
+            userService.save(user);
+        }
+        return null;
+    }
+
+    @GetMapping("/collect")
+    public String collectUsers(@ModelAttribute LoginRequest loginRequest) {
+        System.setProperty("webdriver.chrome.driver", driverPath);
+        ChromeDriver driver = new ChromeDriver();
+        login(driver);
         new WebDriverWait(driver, Duration.ofMillis(500000)).until(ExpectedConditions.presenceOfElementLocated(By.name("q")));
         WebElement query = driver.findElement(By.className("_58al"));
         query.click();
@@ -90,43 +109,29 @@ public class CollectUsersController {
             }
         } while (hasNextPageFound);
         explorerUtil.saveUsers(driver, tokensStr);
+        login(driver);
         explorerUtil.findInstagramUsers(driver);
         return "redirect:/posts/users";
     }
 
     @GetMapping("/fromToken")
-    public String collectUsersByToken(){
-        String ps = "MBS97facebook";
-//        String ps = "DAVO3032001";
-        System.setProperty("webdriver.chrome.driver", "C:\\Users\\Kraken\\IdeaProjects\\AutoPosting\\src\\main\\resources\\static\\SeleniumWebDriver\\chromedriver.exe");
+    public String collectUsersByToken() {
+        System.setProperty("webdriver.chrome.driver", driverPath);
         ChromeDriver driver = new ChromeDriver();
-        driver.get("https://developers.facebook.com/tools/debug/accesstoken/");
-        driver.manage().window().maximize();
-        List<WebElement> aTagElements = driver.findElements(By.tagName("a"));
-        for (WebElement aTagElement : aTagElements) {
-            if (aTagElement.getText().equalsIgnoreCase("log in")) {
-                aTagElement.click();
-                break;
-            }
-        }
-        new WebDriverWait(driver, Duration.ofMillis(500000)).until(ExpectedConditions.presenceOfElementLocated(By.name("email")));
-        WebElement email = driver.findElement(By.name("email"));
-        WebElement pass = driver.findElement(By.name("pass"));
-        email.sendKeys("093094127");
-//        email.sendKeys("+37495136352");
-        pass.sendKeys(ps);
-        driver.findElement(By.name("login")).click();
+        login(driver);
         new WebDriverWait(driver, Duration.ofMillis(500000)).until(ExpectedConditions.presenceOfElementLocated(By.name("access_token")));
-
         explorerUtil.saveUsersFromDb(driver);
+        driver.close();
         return "redirect:/users";
     }
 
     @GetMapping("/collectInsta")
-    public String collectInstagram(){
-        System.setProperty("webdriver.chrome.driver", "C:\\Users\\Kraken\\IdeaProjects\\AutoPosting\\src\\main\\resources\\static\\SeleniumWebDriver\\chromedriver.exe");
+    public String collectInstagram() {
+        System.setProperty("webdriver.chrome.driver", driverPath);
         ChromeDriver driver = new ChromeDriver();
+        login(driver);
         explorerUtil.findInstagramUsersFromDb(driver);
-        return "redirec:/users";
+        driver.close();
+        return "redirect:/users";
     }
 }

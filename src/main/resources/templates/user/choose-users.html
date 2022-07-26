@@ -26,7 +26,7 @@
             <form action="/posts/save" method="post">
                 <div>
                     <p>Text</p>
-                    <input type="text" name="message" class="img-fluid form-control">
+                    <textarea type="text" name="message" class="img-fluid form-control"></textarea>
                 </div>
                 <div>
                     <p>Image Url</p>
@@ -57,7 +57,7 @@
                             <div class="col-sm-12">
                                 <div th:if="${user.profileType.toString().equalsIgnoreCase('BOTH')}"
                                      class="mx-2 d-inline-block">
-                                    <select th:id="'select' + ${user.id}">
+                                    <select th:id="'select' + ${user.id}" class="all">
                                         <option value="instagram">Instagram</option>
                                         <option value="facebook">Facebook</option>
                                         <option value="both" selected>Both</option>
@@ -65,7 +65,7 @@
                                 </div>
                                 <div th:if="${user.profileType.toString().equalsIgnoreCase('INSTAGRAM')}"
                                      class="mx-2">
-                                    <select th:id="'select' + ${user.id}">
+                                    <select th:id="'select' + ${user.id}" class="all">
                                         <option value="instagram" selected>Instagram</option>
                                         <option value="facebook" disabled>Facebook</option>
                                         <option value="both" disabled>Both</option>
@@ -163,7 +163,7 @@
                             <div class="col-sm-12">
                                 <div th:if="${user.profileType.toString().equalsIgnoreCase('BOTH')}"
                                      class="mx-2 d-inline-block">
-                                    <select th:id="'select' + ${user.id}">
+                                    <select th:id="'select' + ${user.id}" class="loan">
                                         <option value="instagram">Instagram</option>
                                         <option value="facebook">Facebook</option>
                                         <option value="both" selected>Both</option>
@@ -179,7 +179,7 @@
                                 </div>
                                 <div th:if="${user.profileType.toString().equalsIgnoreCase('FACEBOOK')}"
                                      class="mx-2">
-                                    <select th:id="'select' + ${user.id}">
+                                    <select th:id="'select' + ${user.id}" class="loan">
                                         <option value="instagram" disabled>Instagram</option>
                                         <option value="facebook" selected>Facebook</option>
                                         <option value="both" disabled>Both</option>
@@ -263,14 +263,14 @@
                 console.log('I was closed by the timer')
             }
         })
-        let elementsByClassName = document.getElementsByClassName("checkedCanadaUsers");
+        let elementsByClassName1 = document.getElementsByClassName("checkedCanadaUsers");
         if (!checkAllButton1.checked) {
 
-            for (const elementByClass of elementsByClassName) {
+            for (const elementByClass of elementsByClassName1) {
                 elementByClass.checked = false;
             }
         } else {
-            for (const elementByClass of elementsByClassName) {
+            for (const elementByClass of elementsByClassName1) {
                 elementByClass.checked = true;
             }
         }
@@ -300,13 +300,13 @@
                 console.log('I was closed by the timer')
             }
         })
-        let elementsByClassName = document.getElementsByClassName("checkedLoanUsers");
+        let elementsByClassName2 = document.getElementsByClassName("checkedLoanUsers");
         if (!checkAllButton2.checked) {
-            for (const elementByClass of elementsByClassName) {
+            for (const elementByClass of elementsByClassName2) {
                 elementByClass.checked = false;
             }
         } else {
-            for (const elementByClass of elementsByClassName) {
+            for (const elementByClass of elementsByClassName2) {
                 elementByClass.checked = true;
             }
         }

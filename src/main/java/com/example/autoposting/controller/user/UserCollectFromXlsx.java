@@ -3,6 +3,7 @@ package com.example.autoposting.controller.user;
 import com.example.autoposting.model.User;
 import com.example.autoposting.model.UserCategory;
 import com.example.autoposting.service.UserService;
+import com.example.autoposting.util.CollectDisabledUsers;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -19,6 +20,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class UserCollectFromXlsx {
     private final UserService userService;
+    private final CollectDisabledUsers collectDisabledUsers;
 
     @GetMapping("/xs")
     public String collect(ModelMap modelMap) throws IOException {
@@ -40,13 +42,12 @@ public class UserCollectFromXlsx {
             List<User> all = userService.findAll();
             for (User user : all) {
                 if(row.getCell(18) != null && row.getCell(18).getStringCellValue().contains(user.getProfileId())){
-                    System.out.println(row.getCell(18).getStringCellValue());
                     user.setChecked(true);
                     userService.save(user);
                 }
             }
         }
-
+        collectDisabledUsers.collectDisabledUsers();
     }
 
     private void collectCanadaUsers() throws IOException {

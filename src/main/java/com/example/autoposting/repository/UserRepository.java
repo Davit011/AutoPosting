@@ -24,4 +24,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     List<User> findAllByCategoryAndStatus(UserCategory userCategory,UserStatus status);
 
+    List<User> findAllByStatusIsNull();
+
+    List<User> findAllByStatus(UserStatus status);
+
 }

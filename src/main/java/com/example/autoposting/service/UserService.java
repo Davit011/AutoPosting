@@ -37,11 +37,22 @@ public class UserService {
         return byProfileId.isPresent();
     }
 
+    public User findUserByProfileId(String id){
+        Optional<User> byProfileId = userRepository.findByProfileId(id);
+        if(byProfileId.isPresent()){
+            User user = byProfileId.get();
+            return user;
+        }
+        return null;
+    }
+
     public Optional<User> findByName(String name){
         return userRepository.findUserByName(name);
     }
 
     public List<User> findCheckedUsers(){ return userRepository.findAllByIsChecked(true); }
+
+    public List<User> findUncheckedUsers(){ return userRepository.findAllByIsChecked(false); }
 
     public List<User> findAllUsers(){
         return userRepository.findAllByCategoryIsNull();
@@ -65,6 +76,14 @@ public class UserService {
 
     public List<User> findAllByLoanCategoryAndStatus(){
         return userRepository.findAllByCategoryAndStatus(UserCategory.LOAN,UserStatus.ACTIVE);
+    }
+
+    public List<User> findAllByStatusIsNull(){
+        return userRepository.findAllByStatusIsNull();
+    }
+
+    public List<User> findAllByStatus(UserStatus status){
+        return userRepository.findAllByStatus(status);
     }
 
 }

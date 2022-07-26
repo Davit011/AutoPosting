@@ -37,4 +37,5 @@ public class User {
     private boolean isChecked;
 
     private UserStatus status;
+
 }

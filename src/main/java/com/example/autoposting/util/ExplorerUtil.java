@@ -2,6 +2,7 @@ package com.example.autoposting.util;
 
 import com.example.autoposting.model.Token;
 import com.example.autoposting.model.User;
+import com.example.autoposting.model.UserStatus;
 import com.example.autoposting.model.UserType;
 import com.example.autoposting.service.TokenService;
 import com.example.autoposting.service.UserService;
@@ -25,6 +26,7 @@ public class ExplorerUtil {
 
     private final UserService userService;
     private final TokenService tokenService;
+    private final CollectDisabledUsers collectDisabledUsers;
 
     public List<String> findToken(ChromeDriver driver) {
         new WebDriverWait(driver, Duration.ofMillis(100000)).until(ExpectedConditions.presenceOfElementLocated(By.tagName("br")));
@@ -61,9 +63,11 @@ public class ExplorerUtil {
         return tokensStr;
     }
 
+
     public void saveUsers(ChromeDriver driver, List<String> tokensStr) {
         for (String singleToken : tokensStr) {
             try {
+                driver.get("https://developers.facebook.com/tools/debug/accesstoken/");
 
                 driver.findElement(By.name("access_token")).sendKeys(singleToken);
                 List<WebElement> buttonForDebug = driver.findElements(By.tagName("button"));
@@ -104,6 +108,7 @@ public class ExplorerUtil {
                                                 .token(webElement.getText())
                                                 .name(fullName)
                                                 .profileType(UserType.FACEBOOK)
+                                                .status(UserStatus.ACTIVE)
                                                 .build());
                                     }
                                 }
@@ -116,14 +121,13 @@ public class ExplorerUtil {
                 continue;
             }
         }
+
     }
 
     public void saveUsersFromDb(ChromeDriver driver) {
         List<Token> all = tokenService.findAll();
-
         for (Token singleToken : all) {
-            driver.get("https://developers.facebook.com/tools/debug/accesstoken/");
-
+                driver.get("https://developers.facebook.com/tools/debug/accesstoken/");
             new WebDriverWait(driver, Duration.ofMillis(500000)).until(ExpectedConditions.presenceOfElementLocated(By.name("access_token")));
 
             try {
@@ -135,7 +139,6 @@ public class ExplorerUtil {
                         break;
                     }
                 }
-
                 List<WebElement> debuggedButton = driver.findElements(By.tagName("button"));
                 for (WebElement webElement : debuggedButton) {
                     if (webElement.getText().equalsIgnoreCase("Продлить маркер доступа") || webElement.getText().equalsIgnoreCase("Extend Access Token")) {
@@ -178,6 +181,7 @@ public class ExplorerUtil {
                 continue;
             }
         }
+        collectDisabledUsers.disableUsers();
     }
 
     public void findInstagramUsers(ChromeDriver driver) {
@@ -185,15 +189,6 @@ public class ExplorerUtil {
         for (User user : users) {
             String profileId = user.getProfileId();
             driver.get("https://developers.facebook.com/tools/explorer");
-            driver.manage().window().maximize();
-            List<WebElement> aTagElements = driver.findElements(By.tagName("a"));
-            for (WebElement aTagElement : aTagElements) {
-                if (aTagElement.getText().equalsIgnoreCase("log in")) {
-                    aTagElement.click();
-                    break;
-                }
-            }
-
             new WebDriverWait(driver, Duration.ofMillis(500000)).until(ExpectedConditions.presenceOfElementLocated(By.name("q")));
             WebElement query = driver.findElement(By.className("_58al"));
             query.click();
@@ -227,24 +222,6 @@ public class ExplorerUtil {
     }
 
     public void findInstagramUsersFromDb(ChromeDriver driver) {
-        String ps = "MBS97facebook";
-//        String ps = "DAVO3032001";
-        driver.get("https://developers.facebook.com/tools/explorer/?method=GET&path=me%2Faccounts&version=v14.0");
-        driver.manage().window().maximize();
-        List<WebElement> aTagElements = driver.findElements(By.tagName("a"));
-        for (WebElement aTagElement : aTagElements) {
-            if (aTagElement.getText().equalsIgnoreCase("log in")) {
-                aTagElement.click();
-                break;
-            }
-        }
-        new WebDriverWait(driver, Duration.ofMillis(500000)).until(ExpectedConditions.presenceOfElementLocated(By.name("email")));
-        WebElement email = driver.findElement(By.name("email"));
-        WebElement pass = driver.findElement(By.name("pass"));
-        email.sendKeys("093094127");
-//        email.sendKeys("+37495136352");
-        pass.sendKeys(ps);
-        driver.findElement(By.name("login")).click();
         new WebDriverWait(driver, Duration.ofMillis(500000)).until(ExpectedConditions.presenceOfElementLocated(By.name("q")));
         WebElement query = driver.findElement(By.className("_58al"));
         query.click();

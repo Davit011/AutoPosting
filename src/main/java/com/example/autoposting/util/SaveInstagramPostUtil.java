@@ -43,7 +43,6 @@ public class SaveInstagramPostUtil {
                     .build());
             return;
         }
-
         User user = userById.get();
         OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
@@ -62,13 +61,13 @@ public class SaveInstagramPostUtil {
                 .method("POST", body)
                 .build();
         Response response1 = client.newCall(request1).execute();
-        System.out.println(response1);
+        System.out.println(response1 + " Insta");
         String creationResponse1 = response1.body().string();
         String creationId1 = creationResponse1.split(":")[1].substring(1, creationResponse1.split(":")[1].length() - 2);
         response1.close();
         boolean successful = response1.isSuccessful();
         Post savedPost = postService.save(Post.builder()
-                .text(savePostRequest.getMessage())
+                .text("a")
                 .imgUrl(savePostRequest.getUrl())
                 .status(response1.code())
                 .createdDate(sdf.format(new Date()))

@@ -15,13 +15,11 @@ import javax.persistence.Id;
 @NoArgsConstructor
 @Builder(toBuilder = true)
 @Entity
-public class Token {
+public class FailedUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-
-    private String token;
 
     private String profileId;
 

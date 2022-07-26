@@ -50,17 +50,20 @@ public class SaveFbPostUtil {
                 .build();
         MediaType mediaType = MediaType.parse("text/plain");
         RequestBody body = RequestBody.create(mediaType, "");
+//        System.out.println("https://graph.facebook.com/" + user.getProfileId() + "/photos?url=" + savePostRequest.getUrl() + "&message=" + savePostRequest.getMessage() + "&access_token=" + user.getToken());
         Request request = new Request.Builder()
                 .url("https://graph.facebook.com/" + user.getProfileId() + "/photos?url=" + savePostRequest.getUrl() + "&message=" + savePostRequest.getMessage() + "&access_token=" + user.getToken())
                 .method("POST", body)
                 .build();
+//        System.out.println(request);
         Response response = client.newCall(request).execute();
         String creationResponse = response.body().string();
         String creationId = creationResponse.split(",")[1].split(":")[1].substring(1, creationResponse.split(",")[1].split(":")[1].length() - 2);
         response.close();
+        System.out.println(response + " fb");
         boolean successful = response.isSuccessful();
         Post savedPost = postService.save(Post.builder()
-                .text(savePostRequest.getMessage())
+                .text("a")
                 .imgUrl(savePostRequest.getUrl())
                 .status(response.code())
                 .createdDate(sdf.format(new Date()))
