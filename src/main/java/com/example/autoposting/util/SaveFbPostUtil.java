@@ -12,12 +12,13 @@ import okhttp3.*;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Component
 @RequiredArgsConstructor
@@ -47,6 +48,9 @@ public class SaveFbPostUtil {
 
         User user = userById.get();
         OkHttpClient client = new OkHttpClient().newBuilder()
+                .connectTimeout(60, TimeUnit.SECONDS)
+                .readTimeout(60, TimeUnit.SECONDS)
+                .writeTimeout(60, TimeUnit.SECONDS)
                 .build();
         MediaType mediaType = MediaType.parse("text/plain");
         RequestBody body = RequestBody.create(mediaType, "");
@@ -56,39 +60,45 @@ public class SaveFbPostUtil {
                 .method("POST", body)
                 .build();
 //        System.out.println(request);
-        Response response = client.newCall(request).execute();
-        String creationResponse = response.body().string();
-        String creationId = creationResponse.split(",")[1].split(":")[1].substring(1, creationResponse.split(",")[1].split(":")[1].length() - 2);
-        response.close();
-        System.out.println(response + " fb");
-        boolean successful = response.isSuccessful();
-        Post savedPost = postService.save(Post.builder()
-                .text("a")
-                .imgUrl(savePostRequest.getUrl())
-                .status(response.code())
-                .createdDate(sdf.format(new Date()))
-                .user(user)
-                .creationId(creationId)
-                .type("Facebook")
-                .build());
-        if (successful) {
-            statusService.save(Status.builder()
-                    .text("ok")
-                    .createdDate(LocalDateTime.now())
-                    .profileId(user.getProfileId())
-                    .status(200)
-                    .token(user.getToken())
-                    .post(savedPost)
-                    .build());
-        } else {
-            statusService.save(Status.builder()
-                    .text(response.message())
-                    .createdDate(LocalDateTime.now())
+        try{
+            Response response = client.newCall(request).execute();
+
+            String creationResponse = response.body().string();
+            String creationId = creationResponse.split(",")[1].split(":")[1].substring(1, creationResponse.split(",")[1].split(":")[1].length() - 2);
+            response.close();
+            System.out.println(response + " fb");
+            boolean successful = response.isSuccessful();
+            Post savedPost = postService.save(Post.builder()
+                    .text("a")
+                    .imgUrl(savePostRequest.getUrl())
                     .status(response.code())
-                    .profileId(user.getProfileId())
-                    .token(user.getToken())
-                    .post(savedPost)
+                    .createdDate(sdf.format(new Date()))
+                    .user(user)
+                    .creationId(creationId)
+                    .type("Facebook")
                     .build());
+            if (successful){
+                statusService.save(Status.builder()
+                        .text("ok")
+                        .createdDate(LocalDateTime.now())
+                        .profileId(user.getProfileId())
+                        .status(200)
+                        .token(user.getToken())
+                        .post(savedPost)
+                        .build());
+            } else {
+                statusService.save(Status.builder()
+                        .text(response.message())
+                        .createdDate(LocalDateTime.now())
+                        .status(response.code())
+                        .profileId(user.getProfileId())
+                        .token(user.getToken())
+                        .post(savedPost)
+                        .build());
+            }
+        }catch(SocketTimeoutException e){
+            System.out.println(e.getMessage());
+            return;
         }
     }
 }

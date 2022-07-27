@@ -6,11 +6,13 @@ import com.example.autoposting.model.User;
 import com.example.autoposting.service.PostService;
 import com.example.autoposting.service.StatusService;
 import com.example.autoposting.service.UserService;
+import com.example.autoposting.util.ExplorerUtil;
 import com.example.autoposting.util.SaveFbPostUtil;
 import com.example.autoposting.util.SaveInstagramPostUtil;
 import lombok.RequiredArgsConstructor;
 import okhttp3.RequestBody;
 import okhttp3.*;
+import org.hibernate.mapping.Array;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -18,9 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -32,6 +32,7 @@ public class PostController {
     private final SaveFbPostUtil saveFbPostUtil;
     private final SaveInstagramPostUtil saveInstagramPostUtil;
     private final StatusService statusService;
+    private final ExplorerUtil explorerUtil;
 
 
     @GetMapping
@@ -61,6 +62,11 @@ public class PostController {
 
     @PostMapping("/save")
     public String savePost(@ModelAttribute SavePostRequest savePostRequest, ModelMap modelMap) throws IOException, ParseException {
+        ArrayList<Integer> list = new ArrayList<>();
+        for (int profile : savePostRequest.getProfiles()){
+            list.add(profile);
+        }
+        explorerUtil.saveFindTokensByProfileId(list);
         String message = savePostRequest.getMessage();
         savePostRequest.setMessage(message.replaceAll("#", "%23"));
         int[] profiles = savePostRequest.getProfiles();

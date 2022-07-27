@@ -7,6 +7,7 @@ import com.example.autoposting.model.UserType;
 import com.example.autoposting.service.TokenService;
 import com.example.autoposting.service.UserService;
 import lombok.RequiredArgsConstructor;
+import okhttp3.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.StaleElementReferenceException;
@@ -14,11 +15,14 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -122,6 +126,30 @@ public class ExplorerUtil {
             }
         }
 
+    }
+
+    public void saveFindTokensByProfileId(ArrayList<Integer> id) throws IOException {
+        List<User> foundUsers = new ArrayList<>();
+        for (int user : id) {
+            Optional<User> all = userService.findById(user);
+            all.ifPresent(foundUsers::add);
+        }
+
+        for (User user : foundUsers) {
+            OkHttpClient client = new OkHttpClient().newBuilder()
+                    .build();
+            Request request1 = new Request.Builder()
+                    .url("https://graph.facebook.com/" + user.getProfileId() + "?fields=access_token&access_token=EAAFCqPuW59EBAOiWdRSoqunOqPsb1QrqfiWJDLxHlXQBGErgRPs9aQ8bdZAAJme7D5VG73SHD7VDCGK7uvUh7QiQnqH884zfi4OWoForiByN4fMxUQUwZBzg3hWcyX2UZC1RBy2cAe6mTNLLf8ZCtWxgfgEq68CXKr3IYOYfBcKw2Lid2T5EH64OEz0sRGlzvLcC1TJuLWPLor4tItd3o9HMV9cICk55jAklAnyklSj2MpkEHfAeokdWtIZA87KJ0jhZBKwnoM2gZDZD")
+                    .build();
+            System.out.println(request1);
+            Response response1 = client.newCall(request1).execute();
+            String response = response1.body().string();
+            response1.close();
+            String split = response.split(",")[0].split(":")[1];
+            String substring = split.substring(1, split.length() - 1);
+            user.setToken(substring);
+            userService.save(user);
+        }
     }
 
     public void saveUsersFromDb(ChromeDriver driver) {
