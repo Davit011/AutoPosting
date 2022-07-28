@@ -9,80 +9,83 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
 
-    public List<User> findAll(){
+    public List<User> findAll() {
         return userRepository.findAll();
     }
 
-    public Optional<User> findById(int id){
+    public Optional<User> findById(int id) {
         return userRepository.findById(id);
     }
 
-    public User save(User user){
+    public User save(User user) {
         return userRepository.save(user);
     }
 
-    public void deleteById(int id){
+    public void deleteById(int id) {
         userRepository.deleteById(id);
     }
 
-    public boolean findByProfileId(String id){
+    public boolean findByProfileId(String id) {
         Optional<User> byProfileId = userRepository.findByProfileId(id);
         return byProfileId.isPresent();
     }
 
-    public User findUserByProfileId(String id){
+    public User findUserByProfileId(String id) {
         Optional<User> byProfileId = userRepository.findByProfileId(id);
-        if(byProfileId.isPresent()){
+        if (byProfileId.isPresent()) {
             User user = byProfileId.get();
             return user;
         }
         return null;
     }
 
-    public Optional<User> findByName(String name){
+    public Optional<User> findByName(String name) {
         return userRepository.findUserByName(name);
     }
 
-    public List<User> findCheckedUsers(){ return userRepository.findAllByIsChecked(true); }
+    public List<User> findCheckedUsers() {
+        return userRepository.findAllByIsChecked(true);
+    }
 
-    public List<User> findUncheckedUsers(){ return userRepository.findAllByIsChecked(false); }
+    public List<User> findUncheckedUsers() {
+        return userRepository.findAllByIsChecked(false);
+    }
 
-    public List<User> findAllUsers(){
+    public List<User> findAllUsers() {
         return userRepository.findAllByCategoryIsNull();
     }
 
-    public List<User> findAllCanadaCategory(){
+    public List<User> findAllCanadaCategory() {
         return userRepository.findAllByCategory(UserCategory.CANADA);
     }
 
-    public List<User> findAllByLoanCategory(){
+    public List<User> findAllByLoanCategory() {
         return userRepository.findAllByCategory(UserCategory.LOAN);
     }
 
-    public List<User> findAllUsersByStatus(){
+    public List<User> findAllUsersByStatus() {
         return userRepository.findAllByCategoryIsNullAndAndStatus(UserStatus.ACTIVE);
     }
 
-    public List<User> findAllCanadaCategoryAndStatus(){
+    public List<User> findAllCanadaCategoryAndStatus() {
         return userRepository.findAllByCategoryAndStatus(UserCategory.CANADA, UserStatus.ACTIVE);
     }
 
-    public List<User> findAllByLoanCategoryAndStatus(){
-        return userRepository.findAllByCategoryAndStatus(UserCategory.LOAN,UserStatus.ACTIVE);
+    public List<User> findAllByLoanCategoryAndStatus() {
+        return userRepository.findAllByCategoryAndStatus(UserCategory.LOAN, UserStatus.ACTIVE);
     }
 
-    public List<User> findAllByStatusIsNull(){
+    public List<User> findAllByStatusIsNull() {
         return userRepository.findAllByStatusIsNull();
     }
 
-    public List<User> findAllByStatus(UserStatus status){
+    public List<User> findAllByStatus(UserStatus status) {
         return userRepository.findAllByStatus(status);
     }
 

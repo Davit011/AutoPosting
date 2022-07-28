@@ -2,6 +2,7 @@ package com.example.autoposting.controller.user;
 
 import com.example.autoposting.dto.LoginRequest;
 import com.example.autoposting.model.User;
+import com.example.autoposting.model.UserType;
 import com.example.autoposting.service.UserService;
 import com.example.autoposting.util.ExplorerUtil;
 import lombok.RequiredArgsConstructor;
@@ -39,8 +40,8 @@ public class CollectUsersController {
 //    }
 
     public void login(ChromeDriver driver) {
-//        String ps = "MBS97facebook";
-        String ps = "DAVO3032001";
+        String ps = "MBS97facebook";
+//        String ps = "DAVO3032001";
         driver.get("https://developers.facebook.com/tools/explorer/?method=GET&path=me%2Faccounts&version=v14.0");
         driver.manage().window().maximize();
         List<WebElement> aTagElements = driver.findElements(By.tagName("a"));
@@ -53,14 +54,14 @@ public class CollectUsersController {
         new WebDriverWait(driver, Duration.ofMillis(500000)).until(ExpectedConditions.presenceOfElementLocated(By.name("email")));
         WebElement email = driver.findElement(By.name("email"));
         WebElement pass = driver.findElement(By.name("pass"));
-//        email.sendKeys("093094127");
-        email.sendKeys("+37495136352");
+        email.sendKeys("093094127");
+//        email.sendKeys("+37495136352");
         pass.sendKeys(ps);
         driver.findElement(By.name("login")).click();
     }
 
     @GetMapping("s")
-    public String a(){
+    public String a() {
         List<User> all = userService.findAll();
         for (User user : all) {
             user.setChecked(false);
@@ -132,6 +133,18 @@ public class CollectUsersController {
         login(driver);
         explorerUtil.findInstagramUsersFromDb(driver);
         driver.close();
+        return "redirect:/users";
+    }
+
+    @GetMapping("/onlyFb")
+    public String onlyFbUsers() {
+        List<User> all = userService.findAll();
+        for (User user : all) {
+            if (user.getId() <= 146) {
+                user.setProfileType(UserType.FACEBOOK);
+                userService.save(user);
+            }
+        }
         return "redirect:/users";
     }
 }

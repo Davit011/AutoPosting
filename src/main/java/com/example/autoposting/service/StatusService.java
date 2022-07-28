@@ -12,13 +12,17 @@ import javax.transaction.Transactional;
 public class StatusService {
     private final StatusRepository statusRepository;
 
-    public Status save(Status status){
+    public Status save(Status status) {
         return statusRepository.save(status);
     }
 
-    public void deleteById(int id){ statusRepository.deleteById(id); }
+    public void deleteById(int id) {
+        statusRepository.deleteById(id);
+    }
 
     @Transactional
-    public void deleteByPostId(int id){ statusRepository.deleteByPost_Id(id); }
+    public void deleteByPostId(int id) {
+        statusRepository.deleteByPost_Id(id);
+    }
 
 }

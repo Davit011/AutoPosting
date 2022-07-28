@@ -1,9 +1,9 @@
 spring:
   datasource:
-    url:    jdbc:mysql://localhost:3307/auto_posting_test
-#    url: jdbc:mysql://localhost:3307/auto_posting
+#    url:    jdbc:mysql://localhost:3307/auto_posting_test
+    url: jdbc:mysql://localhost:3307/auto_posting
     username: root
-    password: admin
+    password:
   jpa:
     hibernate:
       ddl-auto: update
@@ -13,5 +13,5 @@ spring:
 
 key:
   excelPath: C:\Users\Kraken\IdeaProjects\AutoPosting\src\main\resources\static\XlsxFiles\IG CLIENTS NEW SHEET gg.xlsx
-  token: EAAFCqPuW59EBAB21HqdSZBuJVZCZBhdRvMH3gxtrC7JG59PIRrbxXZCErZBqSgPQMPIZA0SggTfSAbZAWs1MRH5Qkh7KIG65ZCr0EWYYH1KskmEYODv4PEhSIFNDWtsql6Xxjx3bASbuAZAZB6oOFVBx0Jz9ZCCIDYnGKIgOW58YXa1BSZBU12g1e5WbEk8Upc4anKgZD
+  token:
   driver: C:\Users\Kraken\IdeaProjects\AutoPosting\src\main\resources\static\SeleniumWebDriver\chromedriver.exe

@@ -187,7 +187,7 @@
         document.getElementById("removeForm").submit();
     }
 
-    function search(){
+    function search() {
         let elementById = document.getElementById("search");
         let elementsByTagName = document.getElementsByTagName("tr");
         for (const elementByTagName of elementsByTagName) {
@@ -196,7 +196,7 @@
         for (const elementByTagName of elementsByTagName) {
             console.log(elementByTagName.innerText + "td")
             console.log(elementById.value + "search")
-            if(elementByTagName.innerText.includes(elementById.value)){
+            if (elementByTagName.innerText.includes(elementById.value)) {
                 elementByTagName.style.display = "revert";
             }
         }

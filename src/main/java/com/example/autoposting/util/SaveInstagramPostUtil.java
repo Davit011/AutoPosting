@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Optional;
@@ -47,7 +46,7 @@ public class SaveInstagramPostUtil {
         User user = userById.get();
         OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
-        try{
+        try {
             MediaType mediaType = MediaType.parse("text/plain");
             RequestBody body = RequestBody.create(mediaType, "");
             Request request = new Request.Builder()
@@ -97,7 +96,7 @@ public class SaveInstagramPostUtil {
                         .post(savedPost)
                         .build());
             }
-        }catch(SocketTimeoutException e){
+        } catch (SocketTimeoutException e) {
             System.out.println(e.getMessage());
             return;
         }

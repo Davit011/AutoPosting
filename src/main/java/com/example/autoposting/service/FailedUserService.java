@@ -14,16 +14,16 @@ public class FailedUserService {
 
     private final FailedUserRepository failedUserRepository;
 
-    public FailedUser save(FailedUser failedUser){
+    public FailedUser save(FailedUser failedUser) {
         return failedUserRepository.save(failedUser);
     }
 
     @Transactional
-    public void deleteAllRepeats(String id){
+    public void deleteAllRepeats(String id) {
         failedUserRepository.deleteAllByProfileId(id);
     }
 
-    public List<FailedUser> findAll(){
+    public List<FailedUser> findAll() {
         return failedUserRepository.findAll();
     }
 }

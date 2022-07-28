@@ -7,7 +7,9 @@ import com.example.autoposting.model.UserType;
 import com.example.autoposting.service.TokenService;
 import com.example.autoposting.service.UserService;
 import lombok.RequiredArgsConstructor;
-import okhttp3.*;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.StaleElementReferenceException;
@@ -15,7 +17,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.springframework.context.annotation.Profile;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -31,6 +33,9 @@ public class ExplorerUtil {
     private final UserService userService;
     private final TokenService tokenService;
     private final CollectDisabledUsers collectDisabledUsers;
+
+    @Value("${key.token}")
+    private String token;
 
     public List<String> findToken(ChromeDriver driver) {
         new WebDriverWait(driver, Duration.ofMillis(100000)).until(ExpectedConditions.presenceOfElementLocated(By.tagName("br")));
@@ -139,7 +144,7 @@ public class ExplorerUtil {
             OkHttpClient client = new OkHttpClient().newBuilder()
                     .build();
             Request request1 = new Request.Builder()
-                    .url("https://graph.facebook.com/" + user.getProfileId() + "?fields=access_token&access_token=EAAFCqPuW59EBAOiWdRSoqunOqPsb1QrqfiWJDLxHlXQBGErgRPs9aQ8bdZAAJme7D5VG73SHD7VDCGK7uvUh7QiQnqH884zfi4OWoForiByN4fMxUQUwZBzg3hWcyX2UZC1RBy2cAe6mTNLLf8ZCtWxgfgEq68CXKr3IYOYfBcKw2Lid2T5EH64OEz0sRGlzvLcC1TJuLWPLor4tItd3o9HMV9cICk55jAklAnyklSj2MpkEHfAeokdWtIZA87KJ0jhZBKwnoM2gZDZD")
+                    .url("https://graph.facebook.com/" + user.getProfileId() + "?fields=access_token&access_token=" + token)
                     .build();
             System.out.println(request1);
             Response response1 = client.newCall(request1).execute();
@@ -152,10 +157,50 @@ public class ExplorerUtil {
         }
     }
 
+    public void findAllTokensByProfileId() throws IOException {
+        List<User> all1 = userService.findAll();
+        for (User user : all1) {
+            OkHttpClient client = new OkHttpClient().newBuilder()
+                    .build();
+            Request request1 = new Request.Builder()
+                    .url("https://graph.facebook.com/" + user.getProfileId() + "?fields=access_token&access_token=" + token)
+                    .build();
+            System.out.println(request1);
+            Response response1 = client.newCall(request1).execute();
+            String response = response1.body().string();
+            response1.close();
+            String split = response.split(",")[0].split(":")[1];
+            String substring = split.substring(1, split.length() - 1);
+            user.setToken(substring);
+            userService.save(user);
+        }
+    }
+
+    public void findListTokensByProfileId(int id) throws IOException {
+        List<User> all1 = userService.findAll();
+        for (User user : all1) {
+            if (user.getId() > id) {
+                OkHttpClient client = new OkHttpClient().newBuilder()
+                        .build();
+                Request request1 = new Request.Builder()
+                        .url("https://graph.facebook.com/" + user.getProfileId() + "?fields=access_token&access_token=" + token)
+                        .build();
+                System.out.println(request1);
+                Response response1 = client.newCall(request1).execute();
+                String response = response1.body().string();
+                response1.close();
+                String split = response.split(",")[0].split(":")[1];
+                String substring = split.substring(1, split.length() - 1);
+                user.setToken(substring);
+                userService.save(user);
+            }
+        }
+    }
+
     public void saveUsersFromDb(ChromeDriver driver) {
         List<Token> all = tokenService.findAll();
         for (Token singleToken : all) {
-                driver.get("https://developers.facebook.com/tools/debug/accesstoken/");
+            driver.get("https://developers.facebook.com/tools/debug/accesstoken/");
             new WebDriverWait(driver, Duration.ofMillis(500000)).until(ExpectedConditions.presenceOfElementLocated(By.name("access_token")));
 
             try {
@@ -298,6 +343,58 @@ public class ExplorerUtil {
                 }
             }
             continue;
+        }
+    }
+
+    public void getLongTimeToken(ChromeDriver driver, List<User> user, int id) {
+        new WebDriverWait(driver, Duration.ofMillis(500000)).until(ExpectedConditions.presenceOfElementLocated(By.id("js_k")));
+        for (User user1 : user) {
+            if (user1.getId() > id) {
+                try {
+                    driver.get("https://developers.facebook.com/tools/debug/accesstoken/");
+                    new WebDriverWait(driver, Duration.ofMillis(500000)).until(ExpectedConditions.presenceOfElementLocated(By.name("access_token")));
+                    driver.findElement(By.name("access_token")).sendKeys(user1.getToken());
+                    List<WebElement> buttonForDebug = driver.findElements(By.tagName("button"));
+                    for (WebElement webElement : buttonForDebug) {
+                        if (webElement.getText().equalsIgnoreCase("Отладка") || webElement.getText().equalsIgnoreCase("debug")) {
+                            webElement.click();
+                            break;
+                        }
+                    }
+
+                    List<WebElement> debuggedButton = driver.findElements(By.tagName("button"));
+                    for (WebElement webElement : debuggedButton) {
+                        if (webElement.getText().equalsIgnoreCase("Продлить маркер доступа") || webElement.getText().equalsIgnoreCase("Extend Access Token")) {
+                            webElement.click();
+                            break;
+                        }
+                    }
+
+                    new WebDriverWait(driver, Duration.ofMillis(500000)).until(ExpectedConditions.presenceOfElementLocated(By.tagName("code")));
+                    List<WebElement> longTimeToken = driver.findElements(By.tagName("code"));
+
+                    List<WebElement> trTagElements = driver.findElements(By.tagName("tr"));
+                    for (WebElement trTagElement : trTagElements) {
+                        if (trTagElement.getText().contains("ID Страницы") || trTagElement.getText().contains("Page ID")) {
+                            List<WebElement> spanTags = trTagElement.findElements(By.tagName("span"));
+                            for (WebElement spanTag : spanTags) {
+                                if (!spanTag.getText().contains("ID Страницы") && !spanTag.getText().contains("Page ID")) {
+                                    for (WebElement webElement : longTimeToken) {
+                                        if (webElement.getText().contains("EAA")) {
+                                            user1.setToken(webElement.getText());
+                                            userService.save(user1);
+                                        }
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                } catch (StaleElementReferenceException e) {
+                    continue;
+                }
+            }
+
         }
     }
 

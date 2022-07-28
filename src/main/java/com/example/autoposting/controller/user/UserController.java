@@ -10,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -23,8 +22,8 @@ public class UserController {
     @GetMapping
     public String allUsers(ModelMap modelMap) {
         modelMap.addAttribute("users", userService.findAllUsers());
-        modelMap.addAttribute("canada",userService.findAllCanadaCategory());
-        modelMap.addAttribute("loan",userService.findAllByLoanCategory());
+        modelMap.addAttribute("canada", userService.findAllCanadaCategory());
+        modelMap.addAttribute("loan", userService.findAllByLoanCategory());
         System.out.println("Looking for a gift to give your real estate agent? By far, the greatest gift is a referral. You’ll never see your real estate agent jump for so much joy when they learn you referred them to someone, promise!\n" +
                 ".\n" +
                 ".\n" +

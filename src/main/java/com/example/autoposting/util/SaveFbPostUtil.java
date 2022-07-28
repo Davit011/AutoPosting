@@ -60,7 +60,7 @@ public class SaveFbPostUtil {
                 .method("POST", body)
                 .build();
 //        System.out.println(request);
-        try{
+        try {
             Response response = client.newCall(request).execute();
 
             String creationResponse = response.body().string();
@@ -77,7 +77,7 @@ public class SaveFbPostUtil {
                     .creationId(creationId)
                     .type("Facebook")
                     .build());
-            if (successful){
+            if (successful) {
                 statusService.save(Status.builder()
                         .text("ok")
                         .createdDate(LocalDateTime.now())
@@ -96,7 +96,7 @@ public class SaveFbPostUtil {
                         .post(savedPost)
                         .build());
             }
-        }catch(SocketTimeoutException e){
+        } catch (SocketTimeoutException e) {
             System.out.println(e.getMessage());
             return;
         }

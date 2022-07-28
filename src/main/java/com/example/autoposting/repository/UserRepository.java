@@ -22,7 +22,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     List<User> findAllByCategoryIsNullAndAndStatus(UserStatus status);
 
-    List<User> findAllByCategoryAndStatus(UserCategory userCategory,UserStatus status);
+    List<User> findAllByCategoryAndStatus(UserCategory userCategory, UserStatus status);
 
     List<User> findAllByStatusIsNull();
 

@@ -2,7 +2,6 @@ package com.example.autoposting.controller.user;
 
 import com.example.autoposting.model.*;
 import com.example.autoposting.service.FailedUserService;
-import com.example.autoposting.service.TokenService;
 import com.example.autoposting.service.UserService;
 import com.example.autoposting.util.ExplorerUtil;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -44,6 +42,8 @@ public class CollectUsersFromExcel {
     private String driverPath;
     @Value("${key.token}")
     private String token;
+
+    private int id = 565;
 
     @GetMapping("/excel/fb")
     public String collectFbUsersFromExcel() throws IOException {
@@ -89,7 +89,7 @@ public class CollectUsersFromExcel {
                         }
                         break;
                     case 3:
-                        if (row.getCell(0) != null){
+                        if (row.getCell(0) != null) {
                             name = row.getCell(0).getStringCellValue();
                             userCategory = UserCategory.CANADA;
                         }
@@ -179,7 +179,7 @@ public class CollectUsersFromExcel {
     }
 
     @GetMapping("/remove/repeats")
-    public String deleteRepeatUsers(){
+    public String deleteRepeatUsers() {
         List<FailedUser> all = failedUserService.findAll();
         Set<String> id = new HashSet<>();
         for (FailedUser failedUser : all) {
@@ -197,6 +197,8 @@ public class CollectUsersFromExcel {
 
     @GetMapping("/excel/ig")
     public String findIgUsers() throws IOException {
+//        explorerUtil.findListTokensByProfileId(id);
+//        longTimeToken();
         List<User> uncheckedUsers = userService.findUncheckedUsers();
         for (User uncheckedUser : uncheckedUsers) {
             OkHttpClient client = new OkHttpClient().newBuilder()
@@ -206,7 +208,7 @@ public class CollectUsersFromExcel {
                     .build();
             Response response = client.newCall(request).execute();
             String responseBody = response.body().string();
-            if(responseBody.contains("instagram_business_account")){
+            if (responseBody.contains("instagram_business_account")) {
                 String split = responseBody.split(",")[0].split(":")[2];
                 String substring = split.substring(1, split.length() - 2);
                 uncheckedUser.setProfileType(UserType.BOTH);
@@ -215,6 +217,26 @@ public class CollectUsersFromExcel {
             uncheckedUser.setChecked(true);
             userService.save(uncheckedUser);
         }
+        return "redirect:/users";
+    }
+
+    @GetMapping("/uncheck")
+    public String check() {
+        List<User> all = userService.findAll();
+        for (User user : all) {
+            user.setChecked(false);
+            userService.save(user);
+        }
+        return null;
+    }
+
+    @GetMapping("/getLongTimeToken")
+    public String longTimeToken() {
+        System.setProperty("webdriver.chrome.driver", driverPath);
+        ChromeDriver driver = new ChromeDriver();
+        collectUsersController.login(driver);
+        List<User> all = userService.findAll();
+        explorerUtil.getLongTimeToken(driver, all, id);
         return "redirect:/users";
     }
 }

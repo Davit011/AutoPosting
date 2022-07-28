@@ -5,7 +5,9 @@ import com.example.autoposting.model.UserCategory;
 import com.example.autoposting.service.UserService;
 import com.example.autoposting.util.CollectDisabledUsers;
 import lombok.RequiredArgsConstructor;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -14,7 +16,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -41,7 +45,7 @@ public class UserCollectFromXlsx {
 
             List<User> all = userService.findAll();
             for (User user : all) {
-                if(row.getCell(18) != null && row.getCell(18).getStringCellValue().contains(user.getProfileId())){
+                if (row.getCell(18) != null && row.getCell(18).getStringCellValue().contains(user.getProfileId())) {
                     user.setChecked(true);
                     userService.save(user);
                 }
@@ -59,7 +63,7 @@ public class UserCollectFromXlsx {
         for (Row row : sheet) {
             List<User> all = userService.findAll();
             for (User user : all) {
-                if(row.getCell(3) != null && row.getCell(3).getStringCellValue().contains(user.getProfileId())){
+                if (row.getCell(3) != null && row.getCell(3).getStringCellValue().contains(user.getProfileId())) {
                     user.setChecked(true);
                     user.setCategory(UserCategory.CANADA);
                     userService.save(user);
@@ -77,7 +81,7 @@ public class UserCollectFromXlsx {
         for (Row row : sheet) {
             List<User> all = userService.findAll();
             for (User user : all) {
-                if(row.getCell(7) != null && row.getCell(7).getStringCellValue().contains(user.getProfileId())){
+                if (row.getCell(7) != null && row.getCell(7).getStringCellValue().contains(user.getProfileId())) {
                     user.setChecked(true);
                     user.setCategory(UserCategory.LOAN);
                     userService.save(user);

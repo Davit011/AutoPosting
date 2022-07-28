@@ -12,7 +12,6 @@ import com.example.autoposting.util.SaveInstagramPostUtil;
 import lombok.RequiredArgsConstructor;
 import okhttp3.RequestBody;
 import okhttp3.*;
-import org.hibernate.mapping.Array;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +19,10 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -63,10 +65,10 @@ public class PostController {
     @PostMapping("/save")
     public String savePost(@ModelAttribute SavePostRequest savePostRequest, ModelMap modelMap) throws IOException, ParseException {
         ArrayList<Integer> list = new ArrayList<>();
-        for (int profile : savePostRequest.getProfiles()){
+        for (int profile : savePostRequest.getProfiles()) {
             list.add(profile);
         }
-        explorerUtil.saveFindTokensByProfileId(list);
+//        explorerUtil.saveFindTokensByProfileId(list);
         String message = savePostRequest.getMessage();
         savePostRequest.setMessage(message.replaceAll("#", "%23"));
         int[] profiles = savePostRequest.getProfiles();
